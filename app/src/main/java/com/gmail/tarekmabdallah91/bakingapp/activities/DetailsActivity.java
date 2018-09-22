@@ -17,12 +17,13 @@
 package com.gmail.tarekmabdallah91.bakingapp.activities;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
+
 import com.gmail.tarekmabdallah91.bakingapp.R;
 import com.gmail.tarekmabdallah91.bakingapp.adapters.images_recipes_adapter.ImagesRecipesAdapter;
 import com.gmail.tarekmabdallah91.bakingapp.adapters.images_recipes_adapter.OnImagesRecipesClickListener;
@@ -37,7 +38,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
+import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.COMMA;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.RECIPE_KEYWORD;
+import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.SDK_MARSHMALLOW;
 
 public class DetailsActivity extends AppCompatActivity implements OnImagesRecipesClickListener {
 
@@ -113,20 +116,19 @@ public class DetailsActivity extends AppCompatActivity implements OnImagesRecipe
      */
     private void setImagesUrls (){
         String images = recipeEntry.getImages();
-        Timber.v("images are : %s " , images);
 
         if (images.isEmpty()){
-            Timber.v("images are : empty ");
+            Timber.v(getString(R.string.images_empty_msg));
             // "https://joyofandroid.com/wp-content/uploads/2013/03/android-female-version.jpg"
             imagesRecyclerView.setVisibility(View.GONE);
             noImagesTV.setText(noImagesMsg);
             noImagesTV.setVisibility(View.VISIBLE);
 
-        }else if (images.contains(",")){
-            imagesUrls = images.split(",");
-            Timber.v("images contain : , %d" , imagesUrls.length);
+        } else if (images.contains(COMMA)) {
+            imagesUrls = images.split(COMMA);
+            Timber.v(getString(R.string.images_contain_msg), imagesUrls.length);
         }else {
-            Timber.v("images contains one image");
+            Timber.v(getString(R.string.image_msg));
             imagesUrls = new String[]{images};
         }
 
@@ -137,20 +139,18 @@ public class DetailsActivity extends AppCompatActivity implements OnImagesRecipe
      */
     private void setVideosUrls (){
         String videos = recipeEntry.getVideos();
-
-        videos = null;
         if (null == videos || videos.isEmpty()){
             // tell user that there is no videos and show fun video
             videosUrls = new String[]{getString(R.string.media_url_dash)};
             noVideosTV.setText(noVideosMsg);
             noVideosTV.setVisibility(View.VISIBLE);
-        }else if (videos.contains(",")){
+        } else if (videos.contains(COMMA)) {
             // means that there are list of videos then split them to an String[] and display all of them
-            videosUrls = videos.split(",");
-            Timber.v("videos contains : %d " , videosUrls.length);
+            videosUrls = videos.split(COMMA);
+            Timber.v(getString(R.string.videos_msg), videosUrls.length);
         }else {
             // ready to display dash format
-            Timber.v("videos contain one video ");
+            Timber.v(getString(R.string.video_msg));
             videosUrls = new String[]{videos};
         }
     }
@@ -163,7 +163,7 @@ public class DetailsActivity extends AppCompatActivity implements OnImagesRecipe
     @Override
     public void onStart() {
         super.onStart();
-        if (Util.SDK_INT > 23) {
+        if (Util.SDK_INT > SDK_MARSHMALLOW) {
             recipePlayer.initializePlayerForDash(playerView , videosUrls);
         }
     }
@@ -172,14 +172,14 @@ public class DetailsActivity extends AppCompatActivity implements OnImagesRecipe
     public void onResume() {
         recipePlayer.hideSystemUi();
         super.onResume();
-        if ((Util.SDK_INT <= 23) || exoPlayer == null) {
+        if ((Util.SDK_INT <= SDK_MARSHMALLOW) || exoPlayer == null) {
             exoPlayer = recipePlayer.initializePlayerForDash(playerView , videosUrls);
         }
     }
     @Override
     public void onPause() {
         super.onPause();
-        if (Util.SDK_INT <= 23 ) {
+        if (Util.SDK_INT <= SDK_MARSHMALLOW) {
             recipePlayer.releasePlayer();
         }
     }
@@ -187,7 +187,7 @@ public class DetailsActivity extends AppCompatActivity implements OnImagesRecipe
     @Override
     public void onStop() {
         super.onStop();
-        if (Util.SDK_INT > 23) {
+        if (Util.SDK_INT > SDK_MARSHMALLOW) {
             recipePlayer.releasePlayer();
         }
     }

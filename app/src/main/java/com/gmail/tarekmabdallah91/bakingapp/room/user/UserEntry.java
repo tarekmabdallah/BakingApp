@@ -30,7 +30,7 @@ public class UserEntry implements Parcelable{
         this.locationUrl = locationUrl;
     }
 
-    public UserEntry(int rowId, String userId, String firstName, String lastName, int gender, String imageUrl ,String locationUrl){
+    UserEntry(int rowId, String userId, String firstName, String lastName, int gender, String imageUrl, String locationUrl) {
         this.rowId = rowId;
         this.userId = userId;
         this.firstName = firstName;

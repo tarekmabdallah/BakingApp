@@ -19,16 +19,24 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.gmail.tarekmabdallah91.bakingapp.R;
-import com.gmail.tarekmabdallah91.bakingapp.adapters.main_activity_adapter.RecipesAdapter;
 import com.gmail.tarekmabdallah91.bakingapp.adapters.main_activity_adapter.OnRecipeClickListener;
+import com.gmail.tarekmabdallah91.bakingapp.adapters.main_activity_adapter.RecipesAdapter;
 import com.gmail.tarekmabdallah91.bakingapp.room.PresenterRoom;
 import com.gmail.tarekmabdallah91.bakingapp.room.recipe.RecipeEntry;
 import com.gmail.tarekmabdallah91.bakingapp.room.recipe.RecipeViewModel;
@@ -43,10 +51,17 @@ import timber.log.Timber;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.ZERO;
 
 public class MainActivity extends AppCompatActivity
-implements OnRecipeClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener, OnRecipeClickListener {
 
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout drawer;
+    @BindView(R.id.nav_view)
+    NavigationView navigationView;
     @BindView(R.id.rv_recipes)
     RecyclerView recyclerView;
+
 
     private RecipesAdapter adapter;
     private static Bundle lastInsertedData;
@@ -59,7 +74,7 @@ implements OnRecipeClickListener {
         ButterKnife.bind(this);
         Timber.plant(new Timber.DebugTree());
 
-        initiateValues();
+        setUI();
         setViewModel();
 
         // to get data from notification message while app is running in background
@@ -69,9 +84,21 @@ implements OnRecipeClickListener {
 
     private void initiateValues(){
         adapter = new RecipesAdapter(this);
-        setRecyclerView();
         presenterRoom = PresenterRoom.getInstance(this);
 
+    }
+
+    private void setUI() {
+        initiateValues();
+
+        setSupportActionBar(toolbar);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        navigationView.setNavigationItemSelectedListener(this);
+
+        setRecyclerView();
     }
 
     private void setRecyclerView (){
@@ -130,6 +157,63 @@ implements OnRecipeClickListener {
                 presenterRoom.getRecipeDataFromMessageStoreItInRoom(this, data, false);
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.profile_user) {
+            startActivity(new Intent(this, ProfileActivity.class));
+        } else if (id == R.id.nav_gallery) {
+
+        } else if (id == R.id.nav_slideshow) {
+
+        } else if (id == R.id.nav_manage) {
+
+        } else if (id == R.id.nav_share) {
+
+        } else if (id == R.id.nav_send) {
+
+        }
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
 }

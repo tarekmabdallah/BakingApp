@@ -25,10 +25,32 @@ public interface BakingConstants {
     String VIDEOS_KEYWORD = "videos";
     String IMAGES_KEYWORD = "images";
     String NOTIFICATION_CHANNEL_STRING_ID = "Baking Notification";
+    String PROVIDER_AUTHORITY = "com.gmail.tarekmabdallah91.bakingapp.provider";
+    String DATE_PATTERN = "yyyyMMdd_HHmmss";
+    String IMAGE_FILE_NAME = "IMG_%s_";
+    String IMAGE_SUFFIX = ".jpg";
+    String IMAGE_INTENT_TYPE = "image/*";
+
+    String USER_FIRST_NAME = "USER_FIRST_NAME";
+    String USER_LAST_NAME = "USER_LAST_NAME";
+    String USER_LOCATION = "USER_LOCATION";
+    String USER_GENDER = "USER_GENDER";
+    String USER_PICTURE_PATH = "USER_PICTURE_PATH";
+    String USER_STRING_ID = "USER_STRING_ID";
 
     String EMPTY_TEXT = "";
+    String COMMA = ",";
+    String LETTERS_ONLY_REGEX = "^[a-zA-Z]+$";
 
     int ZERO = 0;
+    int GENDER_MALE = 1;
+    int GENDER_FEMALE = 2;
+    int MAX_RANDOM_BOUND = 1000;
+    int SDK_MARSHMALLOW = 23;
     int NOTIFICATION_CHANNEL_INT_ID = 10;
     int NOTIFICATION_REQUEST_CODE = 10;
+
+    int REQUEST_CAPTURE_IMAGE = 20;
+    int REQUEST_PICK_IMAGE_FROM_GALLERY = 22;
+    int REQUEST_STORAGE_PERMISSION = 30;
 }
