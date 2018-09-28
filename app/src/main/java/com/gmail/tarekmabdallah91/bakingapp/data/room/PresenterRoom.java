@@ -13,26 +13,38 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package com.gmail.tarekmabdallah91.bakingapp.room;
+package com.gmail.tarekmabdallah91.bakingapp.data.room;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+
 import com.gmail.tarekmabdallah91.bakingapp.R;
-import com.gmail.tarekmabdallah91.bakingapp.room.recipe.RecipeDao;
-import com.gmail.tarekmabdallah91.bakingapp.room.recipe.RecipeDatabase;
-import com.gmail.tarekmabdallah91.bakingapp.room.recipe.RecipeEntry;
-import com.gmail.tarekmabdallah91.bakingapp.room.user.UserDao;
-import com.gmail.tarekmabdallah91.bakingapp.room.user.UserDatabase;
+import com.gmail.tarekmabdallah91.bakingapp.data.room.recipe.RecipeDao;
+import com.gmail.tarekmabdallah91.bakingapp.data.room.recipe.RecipeDatabase;
+import com.gmail.tarekmabdallah91.bakingapp.data.room.user.UserDao;
+import com.gmail.tarekmabdallah91.bakingapp.data.room.user.UserDatabase;
+import com.gmail.tarekmabdallah91.bakingapp.models.RecipeEntry;
+import com.gmail.tarekmabdallah91.bakingapp.models.UserEntry;
 import com.gmail.tarekmabdallah91.bakingapp.utils.NotificationUtils;
 
 import java.util.concurrent.ExecutionException;
+
 import timber.log.Timber;
+
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.IMAGES_KEYWORD;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.INGREDIENTS_KEYWORD;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.INSTRUCTIONS_KEYWORD;
+import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.LATITUDE_KEYWORD;
+import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.LONGITUDE_KEYWORD;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.TITLE_KEYWORD;
+import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_FIRST_NAME;
+import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_GENDER;
+import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_LAST_NAME;
+import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_LOCATION;
+import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_PICTURE_PATH;
+import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_STRING_ID;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.VIDEOS_KEYWORD;
 
 public class PresenterRoom {
@@ -136,5 +148,66 @@ public class PresenterRoom {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * to insert data to Room
+     *
+     * @param USER_ENTRY as a row to be inserted
+     */
+    static private void insertUserDataToRoom(final Context context, final UserEntry USER_ENTRY) {
+        AsyncTask<Void, Void, Void> insertNewRowInRoom = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                userDao.insertUser(USER_ENTRY);
+                Timber.v(context.getString(R.string.new_row_inserted_msg));
+                return null;
+            }
+        };
+        insertNewRowInRoom.execute();
+    }
+
+    /**
+     * to get the last row in the Room to send it with the intent to the DetailsActivity
+     *
+     * @param context to get strings for timber
+     * @return last Recipe Entry
+     */
+    static public UserEntry getLastUserEntry(final Context context) {
+        AsyncTask<Void, Void, UserEntry> getLastRecipeEntry = new AsyncTask<Void, Void, UserEntry>() {
+            @Override
+            protected UserEntry doInBackground(Void... voids) {
+                Timber.v(context.getString(R.string.get_last_recipe_msg));
+                return userDao.getLastUser();
+            }
+        };
+        getLastRecipeEntry.execute();
+        try {
+            return getLastRecipeEntry.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * to set user row using data from bundle
+     *
+     * @param userData contains user's data
+     */
+    public void setUserEntry(Context context, Bundle userData) {
+        // get data from bundle
+        UserEntry userEntry = new UserEntry(
+                userData.getString(USER_STRING_ID),
+                userData.getString(USER_FIRST_NAME),
+                userData.getString(USER_LAST_NAME),
+                userData.getInt(USER_GENDER),
+                userData.getString(USER_PICTURE_PATH),
+                userData.getString(USER_LOCATION),
+                userData.getDouble(LATITUDE_KEYWORD),
+                userData.getDouble(LONGITUDE_KEYWORD));
+        insertUserDataToRoom(context, userEntry);
     }
 }

@@ -13,9 +13,9 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package com.gmail.tarekmabdallah91.bakingapp.fcm;
+package com.gmail.tarekmabdallah91.bakingapp.models;
 
-class RecipeModel {
+class RecipeModelFCM {
 
     private String title;
     private String ingredients;
@@ -24,7 +24,7 @@ class RecipeModel {
     private String videos;
 
 
-    public RecipeModel(String title, String ingredients, String instructions, String imagesUrls ,String videosUrls){
+    public RecipeModelFCM(String title, String ingredients, String instructions, String imagesUrls, String videosUrls) {
         this.title = title;
         this.ingredients = ingredients;
         this.instructions = instructions;

@@ -88,8 +88,9 @@ limitations under the License.
     <string name="key_favoured_movies">Favourite Movies</string>
 
     <string name="title_preferences_category_background">Background Settings</string>
-    <string name="title_list_background_colors">select your favoured color</string>
+    <string name="title_list_background_colors">select your favoured theme</string>
     <string name="key_background_color_list" translatable="false">backgroundColor</string>
+    <string name="value_color_white" translatable="false">white</string>
     <string name="value_color_green_dark" translatable="false">green_dark</string>
     <string name="value_color_red_dark" translatable="false">red_dark</string>
     <string name="value_color_purple" translatable="false">purple</string>
@@ -98,6 +99,7 @@ limitations under the License.
     <string name="value_color_blue_bright" translatable="false">blue_bright</string>
     <string name="value_color_black" translatable="false">black</string>
 
+    <string name="key_color_white">Default (White)</string>
     <string name="key_color_green_dark">Green Dark</string>
     <string name="key_color_red_dark">Red Dark</string>
     <string name="key_color_purple">Purple</string>
@@ -149,7 +151,7 @@ limitations under the License.
     <string name="title_activity_main2">Main2Activity</string>
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="profile">Profile</string>
+    <string name="profile">Edit Profile</string>
     <string name="description_profile_picture">description_profile_picture</string>
     <string name="male_radio_Btn">Male</string>
     <string name="female_radio_btn">Female</string>
@@ -172,4 +174,14 @@ limitations under the License.
     <string name="image_msg">images contains one image</string>
     <string name="text_is_msg">text is : %s</string>
     <string name="user_choose_gender_msg">user choose gender : %d</string>
+    <string name="need_location_permission_msg">need location permission</string>
+    <string name="google_play_service_not_available_msg">GooglePlayServices Not Available [%s]</string>
+    <string name="place_picker_exception">PlacePicker Exception: %s</string>
+    <string name="no_place_selected_msg">No place selected</string>
+    <string name="themes_title_category_preferences">Themes :</string>
+    <string name="themes_category_key">themes</string>
+    <string name="check_location_msg">Please select your location, and try again</string>
+    <string name="select_your_location_label">Select your location</string>
+    <string name="select_gender_label">Gender :</string>
+    <string name="photo_required_msg">Sorry ! you must select/take a photo !</string>
 </resources>

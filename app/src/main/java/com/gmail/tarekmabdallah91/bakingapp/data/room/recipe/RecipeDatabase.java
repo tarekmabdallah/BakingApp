@@ -13,7 +13,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package com.gmail.tarekmabdallah91.bakingapp.room.recipe;
+package com.gmail.tarekmabdallah91.bakingapp.data.room.recipe;
 
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
@@ -21,6 +21,7 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
 import com.gmail.tarekmabdallah91.bakingapp.R;
+import com.gmail.tarekmabdallah91.bakingapp.models.RecipeEntry;
 
 import timber.log.Timber;
 

@@ -30,17 +30,18 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.gmail.tarekmabdallah91.bakingapp.R;
 import com.gmail.tarekmabdallah91.bakingapp.adapters.main_activity_adapter.OnRecipeClickListener;
 import com.gmail.tarekmabdallah91.bakingapp.adapters.main_activity_adapter.RecipesAdapter;
-import com.gmail.tarekmabdallah91.bakingapp.room.PresenterRoom;
-import com.gmail.tarekmabdallah91.bakingapp.room.recipe.RecipeEntry;
-import com.gmail.tarekmabdallah91.bakingapp.room.recipe.RecipeViewModel;
+import com.gmail.tarekmabdallah91.bakingapp.data.room.PresenterRoom;
+import com.gmail.tarekmabdallah91.bakingapp.data.room.recipe.RecipeViewModel;
+import com.gmail.tarekmabdallah91.bakingapp.models.RecipeEntry;
 import com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants;
+import com.gmail.tarekmabdallah91.bakingapp.utils.ThemesUtils;
 
 import java.util.List;
 
@@ -48,11 +49,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
+import static android.view.View.VISIBLE;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.ZERO;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnRecipeClickListener {
 
+    @BindView(R.id.layout_activity_main)
+    View layout_activity;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.drawer_layout)
@@ -70,7 +74,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setTheme(ThemesUtils.getThemeByKey(this)); // must be before setContentView() to set theme
+        setContentView(R.layout.activity_for_all);
         ButterKnife.bind(this);
         Timber.plant(new Timber.DebugTree());
 
@@ -79,25 +84,23 @@ public class MainActivity extends AppCompatActivity
 
         // to get data from notification message while app is running in background
         getDataFromNotificationMessage();
-
     }
+
 
     private void initiateValues(){
         adapter = new RecipesAdapter(this);
         presenterRoom = PresenterRoom.getInstance(this);
+        // TODO 2 to add fragments
+        // TODO 4 to adjust UI and change widget example
+        // TODO 5 to add essprsso
+        // TODO 6 apply mvp model
 
     }
 
     private void setUI() {
+        layout_activity.setVisibility(VISIBLE);
         initiateValues();
-
-        setSupportActionBar(toolbar);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-        navigationView.setNavigationItemSelectedListener(this);
-
+        setNavBar();
         setRecyclerView();
     }
 
@@ -119,6 +122,15 @@ public class MainActivity extends AppCompatActivity
         });
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
+    }
+
+    private void setNavBar() {
+        setSupportActionBar(toolbar);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
     private void setViewModel (){
@@ -160,6 +172,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (ThemesUtils.isThemeChanged()) recreate(); // to reset the theme
+    }
+
+    @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -169,49 +187,12 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
-        if (id == R.id.profile_user) {
-            startActivity(new Intent(this, ProfileActivity.class));
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        ThemesUtils.setNavSelections(this, id);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

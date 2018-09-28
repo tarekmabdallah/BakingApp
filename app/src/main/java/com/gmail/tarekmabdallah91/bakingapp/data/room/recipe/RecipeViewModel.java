@@ -13,12 +13,14 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package com.gmail.tarekmabdallah91.bakingapp.room.recipe;
+package com.gmail.tarekmabdallah91.bakingapp.data.room.recipe;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
+
+import com.gmail.tarekmabdallah91.bakingapp.models.RecipeEntry;
 
 import java.util.List;
 

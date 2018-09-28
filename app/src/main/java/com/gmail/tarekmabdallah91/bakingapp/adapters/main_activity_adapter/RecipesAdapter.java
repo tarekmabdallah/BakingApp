@@ -23,7 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.gmail.tarekmabdallah91.bakingapp.R;
-import com.gmail.tarekmabdallah91.bakingapp.room.recipe.RecipeEntry;
+import com.gmail.tarekmabdallah91.bakingapp.models.RecipeEntry;
 
 import java.util.List;
 

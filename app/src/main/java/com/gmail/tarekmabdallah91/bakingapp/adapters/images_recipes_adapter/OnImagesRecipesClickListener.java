@@ -15,7 +15,7 @@
  */
 package com.gmail.tarekmabdallah91.bakingapp.adapters.images_recipes_adapter;
 
-import com.gmail.tarekmabdallah91.bakingapp.room.recipe.RecipeEntry;
+import com.gmail.tarekmabdallah91.bakingapp.models.RecipeEntry;
 
 public interface OnImagesRecipesClickListener {
 

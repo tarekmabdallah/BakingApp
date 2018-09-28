@@ -20,37 +20,27 @@ import android.content.Context;
 import android.net.Uri;
 import android.view.View;
 
-import com.gmail.tarekmabdallah91.bakingapp.R;
-import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.dash.DashChunkSource;
 import com.google.android.exoplayer2.source.dash.DashMediaSource;
 import com.google.android.exoplayer2.source.dash.DefaultDashChunkSource;
-import com.google.android.exoplayer2.source.hls.HlsMediaSource;
-import com.google.android.exoplayer2.source.smoothstreaming.DefaultSsChunkSource;
-import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
-import com.google.android.exoplayer2.util.Util;
 
 public class RecipePlayer {
 
     private final Context context;
     private SimpleExoPlayer player;
-    private final DataSource.Factory manifestDataSourceFactory;
-    private final DataSource.Factory mediaDataSourceFactory;
     private static final DefaultBandwidthMeter BANDWIDTH_METER =
             new DefaultBandwidthMeter();
     private long playbackPosition;
@@ -60,61 +50,6 @@ public class RecipePlayer {
 
     public RecipePlayer(Context context){
         this.context = context;
-
-        DefaultBandwidthMeter defaultBandwidthMeter = new DefaultBandwidthMeter();
-        manifestDataSourceFactory =
-                new DefaultDataSourceFactory(
-                        context, Util.getUserAgent(context, context.getString(R.string.app_name)));
-        mediaDataSourceFactory =
-                new DefaultDataSourceFactory(
-                        context,
-                        Util.getUserAgent(context, context.getString(R.string.app_name)),
-                        defaultBandwidthMeter);
-    }
-
-    public SimpleExoPlayer initializePlayerDefault (PlayerView playerView){
-        if (player == null) {
-            player = ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(context),
-                    new DefaultTrackSelector(), new DefaultLoadControl());
-            playerView.setPlayer(player);
-            player.setPlayWhenReady(false);
-
-        }
-        MediaSource mediaSource = buildMediaSource(Uri.parse(context.getString(R.string.media_url_mp4)));
-        player.prepare(mediaSource, true, false);
-
-        return player;
-
-    }
-
-    public void resetPlayer() {
-        if (player != null) {
-            playbackPosition = player.getContentPosition();
-            player.release();
-            player = null;
-        }
-    }
-
-
-    private MediaSource buildMediaSourceDefault(Uri uri) {
-        int type = Util.inferContentType(uri);
-        switch (type) {
-            case C.TYPE_DASH:
-                return new DashMediaSource.Factory(
-                        new DefaultDashChunkSource.Factory(mediaDataSourceFactory),
-                        manifestDataSourceFactory)
-                        .createMediaSource(uri);
-            case C.TYPE_SS:
-                return new SsMediaSource.Factory(
-                        new DefaultSsChunkSource.Factory(mediaDataSourceFactory), manifestDataSourceFactory)
-                        .createMediaSource(uri);
-            case C.TYPE_HLS:
-                return new HlsMediaSource.Factory(mediaDataSourceFactory).createMediaSource(uri);
-            case C.TYPE_OTHER:
-                return new ExtractorMediaSource.Factory(mediaDataSourceFactory).createMediaSource(uri);
-            default:
-                throw new IllegalStateException("Unsupported type: " + type);
-        }
     }
 
     public ExoPlayer initializePlayerForDash(PlayerView playerView , String[] videosUrls) {
@@ -133,7 +68,7 @@ public class RecipePlayer {
             player.setPlayWhenReady(playWhenReady);
             player.seekTo(currentWindow, playbackPosition);
         }
-        // TODO - to play all list of videos
+        // TODO - to play a list of videos
         // get just the 1st element for now
         MediaSource mediaSource = buildMediaSourceDash(Uri.parse(videosUrls[0]));
         player.prepare(mediaSource, true, false);
@@ -148,11 +83,6 @@ public class RecipePlayer {
             player.release();
             player = null;
         }
-    }
-
-    private MediaSource buildMediaSource(Uri uri) {
-        return new ExtractorMediaSource.Factory(new DefaultHttpDataSourceFactory("exoplayer-codelab"))
-                .createMediaSource(uri);
     }
 
     @SuppressLint("InlinedApi")

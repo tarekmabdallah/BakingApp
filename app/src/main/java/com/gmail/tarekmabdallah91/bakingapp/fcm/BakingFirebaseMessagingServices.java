@@ -18,7 +18,7 @@ package com.gmail.tarekmabdallah91.bakingapp.fcm;
 import android.os.Bundle;
 
 import com.gmail.tarekmabdallah91.bakingapp.R;
-import com.gmail.tarekmabdallah91.bakingapp.room.PresenterRoom;
+import com.gmail.tarekmabdallah91.bakingapp.data.room.PresenterRoom;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 

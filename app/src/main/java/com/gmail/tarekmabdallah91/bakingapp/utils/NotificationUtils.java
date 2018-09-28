@@ -22,7 +22,7 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 
 import com.gmail.tarekmabdallah91.bakingapp.activities.DetailsActivity;
-import com.gmail.tarekmabdallah91.bakingapp.room.recipe.RecipeEntry;
+import com.gmail.tarekmabdallah91.bakingapp.models.RecipeEntry;
 
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.NOTIFICATION_CHANNEL_INT_ID;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.NOTIFICATION_CHANNEL_STRING_ID;

@@ -25,8 +25,8 @@ import android.widget.RemoteViews;
 import com.gmail.tarekmabdallah91.bakingapp.R;
 import com.gmail.tarekmabdallah91.bakingapp.activities.DetailsActivity;
 import com.gmail.tarekmabdallah91.bakingapp.activities.MainActivity;
-import com.gmail.tarekmabdallah91.bakingapp.room.PresenterRoom;
-import com.gmail.tarekmabdallah91.bakingapp.room.recipe.RecipeEntry;
+import com.gmail.tarekmabdallah91.bakingapp.data.room.PresenterRoom;
+import com.gmail.tarekmabdallah91.bakingapp.models.RecipeEntry;
 
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.RECIPE_KEYWORD;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.ZERO;

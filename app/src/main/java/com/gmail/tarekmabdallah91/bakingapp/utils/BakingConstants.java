@@ -38,6 +38,16 @@ public interface BakingConstants {
     String USER_PICTURE_PATH = "USER_PICTURE_PATH";
     String USER_STRING_ID = "USER_STRING_ID";
 
+    String PLACE_KEYWORD = "place";
+    String FORMAT_GEO = "geo:%f,%f";
+    String LATITUDE_KEYWORD = "latitude";
+    String LONGITUDE_KEYWORD = "longitude";
+
+    String PREFERENCES_FILE = "_preferences";
+    String BLACK_KEYWORD = "black";
+    String GREEN_KEYWORD = "green_dark";
+    String PURPLE_KEYWORD = "purple";
+
     String EMPTY_TEXT = "";
     String COMMA = ",";
     String LETTERS_ONLY_REGEX = "^[a-zA-Z]+$";
@@ -52,5 +62,8 @@ public interface BakingConstants {
 
     int REQUEST_CAPTURE_IMAGE = 20;
     int REQUEST_PICK_IMAGE_FROM_GALLERY = 22;
+    int REQUEST_PLACE_PIKER = 25;
     int REQUEST_STORAGE_PERMISSION = 30;
+
+    int ZOOM_RATIO = 16;
 }

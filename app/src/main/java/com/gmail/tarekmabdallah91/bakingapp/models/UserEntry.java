@@ -1,4 +1,19 @@
-package com.gmail.tarekmabdallah91.bakingapp.room.user;
+/*
+ Copyright 2018 tarekmabdallah91@gmail.com
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
+package com.gmail.tarekmabdallah91.bakingapp.models;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
@@ -7,7 +22,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 @Entity(tableName = "userProfile")
-public class UserEntry implements Parcelable{
+public class UserEntry implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
     private int rowId;
@@ -18,19 +33,25 @@ public class UserEntry implements Parcelable{
     private int gender;
     private String imageUrl;
     private String locationUrl;
+    private double latitude;
+    private double longitude;
 
 
     @Ignore
-    public UserEntry(String userId ,String firstName, String lastName, int gender, String imageUrl ,String locationUrl){
+    public UserEntry(String userId, String firstName, String lastName, int gender, String imageUrl,
+                     String locationUrl, double latitude, double longitude) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
         this.imageUrl = imageUrl;
         this.locationUrl = locationUrl;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
-    UserEntry(int rowId, String userId, String firstName, String lastName, int gender, String imageUrl, String locationUrl) {
+    public UserEntry(int rowId, String userId, String firstName, String lastName, int gender,
+                     String imageUrl, String locationUrl, double latitude, double longitude) {
         this.rowId = rowId;
         this.userId = userId;
         this.firstName = firstName;
@@ -38,16 +59,21 @@ public class UserEntry implements Parcelable{
         this.gender = gender;
         this.imageUrl = imageUrl;
         this.locationUrl = locationUrl;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
-    private UserEntry(Parcel in) {
+
+    protected UserEntry(Parcel in) {
         rowId = in.readInt();
-        userId = in.readString();
         firstName = in.readString();
         lastName = in.readString();
+        userId = in.readString();
         gender = in.readInt();
         imageUrl = in.readString();
         locationUrl = in.readString();
+        latitude = in.readDouble();
+        longitude = in.readDouble();
     }
 
     public static final Creator<UserEntry> CREATOR = new Creator<UserEntry>() {
@@ -90,6 +116,14 @@ public class UserEntry implements Parcelable{
         this.locationUrl = locationUrl;
     }
 
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
     public String getUserId() {
         return userId;
     }
@@ -118,6 +152,14 @@ public class UserEntry implements Parcelable{
         return locationUrl;
     }
 
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -126,16 +168,13 @@ public class UserEntry implements Parcelable{
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(rowId);
-        dest.writeString(userId);
         dest.writeString(firstName);
         dest.writeString(lastName);
+        dest.writeString(userId);
         dest.writeInt(gender);
         dest.writeString(imageUrl);
         dest.writeString(locationUrl);
+        dest.writeDouble(latitude);
+        dest.writeDouble(longitude);
     }
 }
-
-
-
-
-
