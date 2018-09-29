@@ -19,6 +19,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -28,12 +29,9 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -47,6 +45,7 @@ import com.gmail.tarekmabdallah91.bakingapp.R;
 import com.gmail.tarekmabdallah91.bakingapp.data.room.PresenterRoom;
 import com.gmail.tarekmabdallah91.bakingapp.models.UserEntry;
 import com.gmail.tarekmabdallah91.bakingapp.utils.BitmapUtils;
+import com.gmail.tarekmabdallah91.bakingapp.utils.DrawerUtil;
 import com.gmail.tarekmabdallah91.bakingapp.utils.ThemesUtils;
 import com.gmail.tarekmabdallah91.bakingapp.utils.UserDataUtils;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -73,9 +72,9 @@ import timber.log.Timber;
 import static android.view.View.VISIBLE;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.EMPTY_TEXT;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.FORMAT_GEO;
-import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.GENDER_FEMALE;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.GENDER_MALE;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.IMAGE_INTENT_TYPE;
+import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.IMAGE_SIZE;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.LATITUDE_KEYWORD;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.LONGITUDE_KEYWORD;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.PROVIDER_AUTHORITY;
@@ -88,13 +87,13 @@ import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_GE
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_LAST_NAME;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_LOCATION;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_PICTURE_PATH;
+import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_PICTURE_URI;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_STRING_ID;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.ZERO;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.ZOOM_RATIO;
 
 public class EditProfileActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
-    // TODO show picture profile and name in nav drawer instead of android Icon and dummy data
+        implements /*NavigationView.OnNavigationItemSelectedListener,*/ OnMapReadyCallback {
 
     private static final String TAG = EditProfileActivity.class.getSimpleName();
 
@@ -138,13 +137,12 @@ public class EditProfileActivity extends AppCompatActivity
     private UserEntry user;
     private double latitude;
     private double longitude;
-    private boolean hasImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTheme(ThemesUtils.getThemeByKey(this)); // must be before setContentView() to set theme
-        setContentView(R.layout.activity_for_all);
+        setContentView(R.layout.base_activity);
         ButterKnife.bind(this);
 
         setUI();
@@ -153,10 +151,11 @@ public class EditProfileActivity extends AppCompatActivity
     private void setUI() {
         initiateValues();
         layout_activity.setVisibility(VISIBLE);
+        setSupportActionBar(toolbar);
         setNavBar();
         setMap();
         if (null != user) { // may be null if there is not any entry in userDb
-            Glide.with(this).load(user.getImageUrl()).into(profilePictureIv); // set image view
+            Glide.with(this).load(user.getUserBitmap(this)).into(profilePictureIv); // set image view
             firstNameET.setText(user.getFirstName()); // set first name
             lastNameET.setText(user.getLastName()); // set last name
             int gender = user.getGender(); // get saved gender then set it in the radio group
@@ -165,7 +164,6 @@ public class EditProfileActivity extends AppCompatActivity
             // get user place then set lat lng
             latitude = user.getLatitude();
             longitude = user.getLongitude();
-            hasImage = true;
         }
     }
 
@@ -177,12 +175,13 @@ public class EditProfileActivity extends AppCompatActivity
 
     private void setNavBar() {
         setSupportActionBar(toolbar);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-        navigationView.setNavigationItemSelectedListener(this);
+//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+//                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+//        drawer.addDrawerListener(toggle);
+//        toggle.syncState();
+//        navigationView.setNavigationItemSelectedListener(this);
     }
+
 
     private void setMap() {
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -202,6 +201,7 @@ public class EditProfileActivity extends AppCompatActivity
             if (photoFile != null) {
                 String imageFilePath = photoFile.getAbsolutePath();
                 userData.putString(USER_PICTURE_PATH, imageFilePath);
+                userData.putString(USER_PICTURE_URI, null); // to be sure that user has only one image
                 Uri photoURI = FileProvider.getUriForFile(this, PROVIDER_AUTHORITY, photoFile);
                 openTheCamera.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(openTheCamera, REQUEST_CAPTURE_IMAGE);
@@ -221,20 +221,22 @@ public class EditProfileActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // to get uri for profile picture to save it in Room (UserEntry)
-        String imageFilePath = userData.getString(USER_PICTURE_PATH);
+
         if (REQUEST_CAPTURE_IMAGE == requestCode && RESULT_OK == resultCode) {
-            hasImage = true;
+            String imageFilePath = userData.getString(USER_PICTURE_PATH);
             Glide.with(this).load(imageFilePath).into(profilePictureIv);
         } else if (REQUEST_PICK_IMAGE_FROM_GALLERY == requestCode && RESULT_OK == resultCode) {
             if (data != null) {
                 Uri uri = data.getData();
-                userData.putString(USER_PICTURE_PATH, String.valueOf(uri));
-                hasImage = true;
-                Glide.with(this).load(imageFilePath).into(profilePictureIv);
+                Bitmap imageBitmap = BitmapUtils.uriToBitmap(this, uri, IMAGE_SIZE);
+                String imageFileUri = String.valueOf(uri);
+                userData.putString(USER_PICTURE_URI, imageFileUri);
+                userData.putString(USER_PICTURE_PATH, null); // to be sure that user has one image
+                Glide.with(this).load(imageBitmap).into(profilePictureIv);
             }
         }
         if (requestCode == REQUEST_PLACE_PIKER && resultCode == RESULT_OK) {
-            Place place = null;
+            Place place;
             if (data != null) {
                 place = PlacePicker.getPlace(this, data);
                 if (place == null) {
@@ -304,12 +306,25 @@ public class EditProfileActivity extends AppCompatActivity
 
     }
 
+    /**
+     * to get the user data and validate it then save it each time
+     */
     @OnClick(R.id.save_btn)
     void onClickSaveUserData() {
         // check if user selected / captured photo ?
-        if (!hasImage) {
+        if (null == user // if != null that means that there is an image so continue and don't return
+                && null == userData.getString(USER_PICTURE_PATH)
+                && null == userData.getString(USER_PICTURE_URI)) {
             UserDataUtils.showToastMsg(this, getString(R.string.photo_required_msg));
             return;
+        }
+        // if the user didn't change the image then put it's path/uri in the userData again
+        // because when user click on save btn it get all new data and reset the user data again
+        if (null != user
+                && (null == userData.getString(USER_PICTURE_PATH)
+                && null == userData.getString(USER_PICTURE_URI))) {
+            userData.putString(USER_PICTURE_URI, user.getImageUrl());
+            userData.putString(USER_PICTURE_PATH, user.getImageFilePath());
         }
 
         // get texts from EditTexts
@@ -367,14 +382,7 @@ public class EditProfileActivity extends AppCompatActivity
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 int id = group.getCheckedRadioButtonId();
                 RadioButton selectedRadioBtn = findViewById(id);
-                Timber.d(getString(R.string.user_choose_gender_msg), selectedRadioBtn.getId());
-                switch (selectedRadioBtn.getId()) {
-                    case R.id.female_choice:
-                        userData.putInt(USER_GENDER, GENDER_FEMALE);
-                        break;
-                    default:
-                        userData.putInt(USER_GENDER, GENDER_MALE);
-                }
+                userData.putInt(USER_GENDER, Integer.parseInt(String.valueOf(selectedRadioBtn.getTag())));
             }
         };
         getGenderRG.setOnCheckedChangeListener(changeListenerRadioGroup);
@@ -433,30 +441,31 @@ public class EditProfileActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        DrawerUtil.getDrawer(this, toolbar);
         if (ThemesUtils.isThemeChanged()) recreate(); // to reset the theme
     }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        ThemesUtils.setNavSelections(this, id);
-
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
+//    @Override
+//    public void onBackPressed() {
+//        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+//        if (drawer.isDrawerOpen(GravityCompat.START)) {
+//            drawer.closeDrawer(GravityCompat.START);
+//        } else {
+//            super.onBackPressed();
+//        }
+//    }
+//
+//    @SuppressWarnings("StatementWithEmptyBody")
+//    @Override
+//    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//        // Handle navigation view item clicks here.
+//        int id = item.getItemId();
+//
+//        ThemesUtils.setNavSelections(this, id);
+//
+//        drawer.closeDrawer(GravityCompat.START);
+//        return true;
+//    }
 
     /**
      * runs when the actvity is created

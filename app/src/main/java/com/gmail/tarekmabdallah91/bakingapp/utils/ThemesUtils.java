@@ -1,12 +1,9 @@
 package com.gmail.tarekmabdallah91.bakingapp.utils;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 
 import com.gmail.tarekmabdallah91.bakingapp.R;
-import com.gmail.tarekmabdallah91.bakingapp.activities.EditProfileActivity;
-import com.gmail.tarekmabdallah91.bakingapp.activities.SettingsActivity;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.BLACK_KEYWORD;
@@ -66,25 +63,25 @@ public class ThemesUtils {
         return false;
     }
 
-    /**
-     * to be usable in each activity
-     *
-     * @param context -
-     * @param id      -
-     */
-    public static void setNavSelections(Context context, int id) {
-        if (id == R.id.profile_user) {
-            context.startActivity(new Intent(context, EditProfileActivity.class));
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_settings) {
-            context.startActivity(new Intent(context, SettingsActivity.class));
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-    }
+//    /**
+//     * to be usable in each activity
+//     *
+//     * @param context -
+//     * @param id      -
+//     */
+//    public static void setNavSelections(Context context, int id) {
+//        if (id == R.id.profile_user) {
+//            context.startActivity(new Intent(context, EditProfileActivity.class));
+//        } else if (id == R.id.nav_gallery) {
+//
+//        } else if (id == R.id.nav_slideshow) {
+//
+//        } else if (id == R.id.nav_settings) {
+//            context.startActivity(new Intent(context, SettingsActivity.class));
+//        } else if (id == R.id.nav_share) {
+//
+//        } else if (id == R.id.nav_send) {
+//
+//        }
+//    }
 }

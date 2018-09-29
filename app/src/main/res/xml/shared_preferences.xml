@@ -26,7 +26,9 @@
             android:entries="@array/keys_list_colors"
             android:entryValues="@array/values_list_colors"
             android:key="@string/key_background_color_list"
-            android:title="@string/title_list_background_colors"></ListPreference>
+            android:title="@string/title_list_background_colors">
+
+        </ListPreference>
 
     </PreferenceCategory>
 

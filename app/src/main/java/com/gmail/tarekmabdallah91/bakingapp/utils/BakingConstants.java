@@ -36,6 +36,7 @@ public interface BakingConstants {
     String USER_LOCATION = "USER_LOCATION";
     String USER_GENDER = "USER_GENDER";
     String USER_PICTURE_PATH = "USER_PICTURE_PATH";
+    String USER_PICTURE_URI = "USER_PICTURE_URI";
     String USER_STRING_ID = "USER_STRING_ID";
 
     String PLACE_KEYWORD = "place";
@@ -52,9 +53,16 @@ public interface BakingConstants {
     String COMMA = ",";
     String LETTERS_ONLY_REGEX = "^[a-zA-Z]+$";
 
+    int INVALID = -1;
     int ZERO = 0;
+    int ONE = 1;
+    int TWO = 2;
+    int THREE = 3;
+    int FOUR = 4;
+
+    int IMAGE_SIZE = 100;
+
     int GENDER_MALE = 1;
-    int GENDER_FEMALE = 2;
     int MAX_RANDOM_BOUND = 1000;
     int SDK_MARSHMALLOW = 23;
     int NOTIFICATION_CHANNEL_INT_ID = 10;

@@ -44,6 +44,7 @@ import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_GE
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_LAST_NAME;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_LOCATION;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_PICTURE_PATH;
+import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_PICTURE_URI;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_STRING_ID;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.VIDEOS_KEYWORD;
 
@@ -205,6 +206,7 @@ public class PresenterRoom {
                 userData.getString(USER_LAST_NAME),
                 userData.getInt(USER_GENDER),
                 userData.getString(USER_PICTURE_PATH),
+                userData.getString(USER_PICTURE_URI),
                 userData.getString(USER_LOCATION),
                 userData.getDouble(LATITUDE_KEYWORD),
                 userData.getDouble(LONGITUDE_KEYWORD));

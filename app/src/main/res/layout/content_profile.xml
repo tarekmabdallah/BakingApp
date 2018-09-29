@@ -113,12 +113,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
+                android:tag="1"
                 android:text="@string/male_radio_Btn" />
 
             <RadioButton
                 android:id="@+id/female_choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:tag="2"
                 android:text="@string/female_radio_btn" />
         </RadioGroup>
 

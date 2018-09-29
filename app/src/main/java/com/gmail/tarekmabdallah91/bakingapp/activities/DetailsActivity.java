@@ -18,16 +18,13 @@ package com.gmail.tarekmabdallah91.bakingapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -36,6 +33,7 @@ import com.gmail.tarekmabdallah91.bakingapp.adapters.images_recipes_adapter.Imag
 import com.gmail.tarekmabdallah91.bakingapp.adapters.images_recipes_adapter.OnImagesRecipesClickListener;
 import com.gmail.tarekmabdallah91.bakingapp.exoplayer.RecipePlayer;
 import com.gmail.tarekmabdallah91.bakingapp.models.RecipeEntry;
+import com.gmail.tarekmabdallah91.bakingapp.utils.DrawerUtil;
 import com.gmail.tarekmabdallah91.bakingapp.utils.ThemesUtils;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ui.PlayerView;
@@ -52,7 +50,7 @@ import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.RECIPE_
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.SDK_MARSHMALLOW;
 
 public class DetailsActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OnImagesRecipesClickListener {
+        implements /*NavigationView.OnNavigationItemSelectedListener,*/ OnImagesRecipesClickListener {
 
     @BindView(R.id.layout_activity_details)
     View layout_activity;
@@ -93,7 +91,7 @@ public class DetailsActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTheme(ThemesUtils.getThemeByKey(this)); // must be before setContentView() to set theme
-        setContentView(R.layout.activity_for_all);
+        setContentView(R.layout.base_activity);
         ButterKnife.bind(this);
 
         getComingIntents();
@@ -102,7 +100,7 @@ public class DetailsActivity extends AppCompatActivity
 
     private void setUI (){
         layout_activity.setVisibility(VISIBLE);
-        setNavBar();
+//        setNavBar();
         if (null != recipeEntry) {
             title.setText(recipeEntry.getTitle());
             instructions.setText(recipeEntry.getInstructions());
@@ -120,7 +118,9 @@ public class DetailsActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-        navigationView.setNavigationItemSelectedListener(this);
+        setSupportActionBar(toolbar);
+        DrawerUtil.getDrawer(this, toolbar);
+//        navigationView.setNavigationItemSelectedListener(this);
     }
     private void setImagesRecyclerView(){
         ImagesRecipesAdapter imagesAdapter = new ImagesRecipesAdapter(this);
@@ -184,11 +184,6 @@ public class DetailsActivity extends AppCompatActivity
     }
 
     @Override
-    public void onImagesRecipesClicked(RecipeEntry recipeEntry) {
-
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
         if (Util.SDK_INT > SDK_MARSHMALLOW) {
@@ -222,26 +217,26 @@ public class DetailsActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        ThemesUtils.setNavSelections(this, id);
-
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
+//    @Override
+//    public void onBackPressed() {
+//        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+//        if (drawer.isDrawerOpen(GravityCompat.START)) {
+//            drawer.closeDrawer(GravityCompat.START);
+//        } else {
+//            super.onBackPressed();
+//        }
+//    }
+//
+//    @SuppressWarnings("StatementWithEmptyBody")
+//    @Override
+//    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//        // Handle navigation view item clicks here.
+//        int id = item.getItemId();
+//
+//        ThemesUtils.setNavSelections(this, id);
+//
+//        drawer.closeDrawer(GravityCompat.START);
+//        return true;
+//    }
 
 }

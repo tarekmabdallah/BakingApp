@@ -24,15 +24,12 @@ limitations under the License.
     <dimen name="padding_bottom_details_activity">50dp</dimen>
     <dimen name="padding1">4dp</dimen>
     <dimen name="padding2">8dp</dimen>
-    <dimen name="padding3">10dp</dimen>
 
     <dimen name="widget_height">40dp</dimen>
     <dimen name="widget_width">250dp</dimen>
 
     <dimen name="normal_text_size">18sp</dimen>
     <dimen name="label_text_size">22sp</dimen>
-    <dimen name="rating_text_size">24sp</dimen>
-    <dimen name="rating_full_mark_text_size">12sp</dimen>
 
     <dimen name="user_pic_width">150dp</dimen>
     <dimen name="user_pic_height">150dp</dimen>
@@ -44,6 +41,4 @@ limitations under the License.
 Refer to App Widget Documentation for margin information
 http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
     -->
-    <dimen name="widget_margin">8dp</dimen>
-    <dimen name="fab_margin">16dp</dimen>
 </resources>

@@ -19,18 +19,14 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -41,6 +37,7 @@ import com.gmail.tarekmabdallah91.bakingapp.data.room.PresenterRoom;
 import com.gmail.tarekmabdallah91.bakingapp.data.room.recipe.RecipeViewModel;
 import com.gmail.tarekmabdallah91.bakingapp.models.RecipeEntry;
 import com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants;
+import com.gmail.tarekmabdallah91.bakingapp.utils.DrawerUtil;
 import com.gmail.tarekmabdallah91.bakingapp.utils.ThemesUtils;
 
 import java.util.List;
@@ -53,7 +50,7 @@ import static android.view.View.VISIBLE;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.ZERO;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OnRecipeClickListener {
+        implements /*NavigationView.OnNavigationItemSelectedListener,*/ OnRecipeClickListener {
 
     @BindView(R.id.layout_activity_main)
     View layout_activity;
@@ -75,7 +72,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTheme(ThemesUtils.getThemeByKey(this)); // must be before setContentView() to set theme
-        setContentView(R.layout.activity_for_all);
+        setContentView(R.layout.base_activity);
         ButterKnife.bind(this);
         Timber.plant(new Timber.DebugTree());
 
@@ -100,7 +97,8 @@ public class MainActivity extends AppCompatActivity
     private void setUI() {
         layout_activity.setVisibility(VISIBLE);
         initiateValues();
-        setNavBar();
+        setSupportActionBar(toolbar);
+        DrawerUtil.getDrawer(this, toolbar);
         setRecyclerView();
     }
 
@@ -124,14 +122,14 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private void setNavBar() {
+   /* private void setNavBar() {
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
-    }
+    }*/
 
     private void setViewModel (){
 
@@ -176,7 +174,7 @@ public class MainActivity extends AppCompatActivity
         super.onResume();
         if (ThemesUtils.isThemeChanged()) recreate(); // to reset the theme
     }
-
+/*
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -195,6 +193,6 @@ public class MainActivity extends AppCompatActivity
         ThemesUtils.setNavSelections(this, id);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
+    }*/
 
 }

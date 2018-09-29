@@ -47,10 +47,6 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="text_reviews_style" parent="text_views_style">
-        <item name="android:textColor">@color/text_color_main_activity</item>
-    </style>
-
     <style name="widget_title_style" parent="text_views_style">
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_width">match_parent</item>
@@ -60,44 +56,9 @@
         <item name="android:background">@color/widget_background</item>
     </style>
 
-    <style name="rating_text_views_style">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/rating_text_size</item>
-        <item name="android:gravity">end</item>
-        <item name="android:layout_gravity">end</item>
-        <item name="android:textColor">@color/text_color_main_activity</item>
-        <item name="android:layout_margin">@dimen/padding1</item>
-        <item name="android:padding">@dimen/padding1</item>
-    </style>
-
-    <style name="rating_full_mark_text_views_style">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:text">@string/rating_full_mark</item>
-        <item name="android:textSize">@dimen/rating_full_mark_text_size</item>
-        <item name="android:gravity">end</item>
-        <item name="android:layout_gravity">end</item>
-        <item name="android:textColor">@color/text_color_main_activity</item>
-        <item name="android:layout_margin">@dimen/padding1</item>
-        <item name="android:padding">@dimen/padding1</item>
-    </style>
-
 
     <style name="labels_style" parent="text_views_style">
         <item name="android:textSize">@dimen/label_text_size</item>
-    </style>
-
-    <style name="icons_styles">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_gravity">center</item>
-    </style>
-
-    <style name="poster_land_style">
-        <item name="android:layout_width">@dimen/user_pic_width</item>
-        <item name="android:layout_height">@dimen/user_pic_height</item>
-        <item name="android:layout_gravity">center</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

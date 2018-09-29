@@ -18,8 +18,16 @@ package com.gmail.tarekmabdallah91.bakingapp.models;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.gmail.tarekmabdallah91.bakingapp.utils.BitmapUtils;
+
+import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.IMAGE_SIZE;
 
 @Entity(tableName = "userProfile")
 public class UserEntry implements Parcelable {
@@ -31,32 +39,35 @@ public class UserEntry implements Parcelable {
     private String lastName;
     private String userId;
     private int gender;
-    private String imageUrl;
+    private String imageFilePath; // when user capture image
+    private String imageUrl; // when user pick image from gallery
     private String locationUrl;
     private double latitude;
     private double longitude;
 
 
     @Ignore
-    public UserEntry(String userId, String firstName, String lastName, int gender, String imageUrl,
-                     String locationUrl, double latitude, double longitude) {
+    public UserEntry(String userId, String firstName, String lastName, int gender, String imageFilePath,
+                     String imageUrl, String locationUrl, double latitude, double longitude) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
         this.imageUrl = imageUrl;
+        this.imageFilePath = imageFilePath;
         this.locationUrl = locationUrl;
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
     public UserEntry(int rowId, String userId, String firstName, String lastName, int gender,
-                     String imageUrl, String locationUrl, double latitude, double longitude) {
+                     String imageFilePath, String imageUrl, String locationUrl, double latitude, double longitude) {
         this.rowId = rowId;
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
+        this.imageFilePath = imageFilePath;
         this.imageUrl = imageUrl;
         this.locationUrl = locationUrl;
         this.latitude = latitude;
@@ -64,12 +75,13 @@ public class UserEntry implements Parcelable {
     }
 
 
-    protected UserEntry(Parcel in) {
+    private UserEntry(Parcel in) {
         rowId = in.readInt();
         firstName = in.readString();
         lastName = in.readString();
         userId = in.readString();
         gender = in.readInt();
+        imageFilePath = in.readString();
         imageUrl = in.readString();
         locationUrl = in.readString();
         latitude = in.readDouble();
@@ -108,6 +120,10 @@ public class UserEntry implements Parcelable {
         this.gender = gender;
     }
 
+    public String getImageFilePath() {
+        return imageFilePath;
+    }
+
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
@@ -140,6 +156,10 @@ public class UserEntry implements Parcelable {
         return firstName;
     }
 
+    public void setImageFilePath(String imageFilePath) {
+        this.imageFilePath = imageFilePath;
+    }
+
     public String getImageUrl() {
         return imageUrl;
     }
@@ -160,6 +180,16 @@ public class UserEntry implements Parcelable {
         this.longitude = longitude;
     }
 
+    public Bitmap getUserBitmap(Context context) {
+        // must be there is one image , if one = null the other must be != null
+        Bitmap userBitmap = null;
+        if (null != imageFilePath)
+            userBitmap = BitmapFactory.decodeFile(imageFilePath); // captured photo
+        if (null != imageUrl)
+            userBitmap = BitmapUtils.uriToBitmap(context, Uri.parse(imageUrl), IMAGE_SIZE); // picked image
+        return userBitmap;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -172,6 +202,7 @@ public class UserEntry implements Parcelable {
         dest.writeString(lastName);
         dest.writeString(userId);
         dest.writeInt(gender);
+        dest.writeString(imageFilePath);
         dest.writeString(imageUrl);
         dest.writeString(locationUrl);
         dest.writeDouble(latitude);
