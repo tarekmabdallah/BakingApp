@@ -16,8 +16,6 @@
 package com.gmail.tarekmabdallah91.bakingapp.activities;
 
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -31,28 +29,23 @@ import butterknife.ButterKnife;
 
 import static android.view.View.VISIBLE;
 
-public class SettingsActivity extends AppCompatActivity
-        /*implements*/ /*NavigationView.OnNavigationItemSelectedListener*/ {
+public class SettingsActivity extends AppCompatActivity {
 
     @BindView(R.id.layout_activity_settings)
     View layout_activity;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.drawer_layout)
-    DrawerLayout drawer;
-    @BindView(R.id.nav_view)
-    NavigationView navigationView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTheme(ThemesUtils.getThemeByKey(this)); // must be before setContentView() to set theme
-        setContentView(R.layout.base_activity);
+        setContentView(R.layout.base_layout);
         ButterKnife.bind(this);
         layout_activity.setVisibility(VISIBLE);
         setSupportActionBar(toolbar);
         DrawerUtil.getDrawer(this, toolbar);
-//        setNavBar();
     }
 
     @Override
@@ -60,35 +53,4 @@ public class SettingsActivity extends AppCompatActivity
         super.onResume();
         if (ThemesUtils.isThemeChanged()) recreate(); // to reset the theme
     }
-//
-//    private void setNavBar() {
-//        setSupportActionBar(toolbar);
-//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-//                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-//        drawer.addDrawerListener(toggle);
-//        toggle.syncState();
-//        navigationView.setNavigationItemSelectedListener(this);
-//    }
-//
-//    @Override
-//    public void onBackPressed() {
-//        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-//        if (drawer.isDrawerOpen(GravityCompat.START)) {
-//            drawer.closeDrawer(GravityCompat.START);
-//        } else {
-//            super.onBackPressed();
-//        }
-//    }
-//
-//    @SuppressWarnings("StatementWithEmptyBody")
-//    @Override
-//    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//        // Handle navigation view item clicks here.
-//        int id = item.getItemId();
-//
-//        ThemesUtils.setNavSelections(this, id);
-//
-//        drawer.closeDrawer(GravityCompat.START);
-//        return true;
-//    }
 }

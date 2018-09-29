@@ -24,8 +24,11 @@ import android.view.ViewGroup;
 
 import com.gmail.tarekmabdallah91.bakingapp.R;
 import com.gmail.tarekmabdallah91.bakingapp.models.RecipeEntry;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
+
+import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.ZERO;
 
 public class RecipesAdapter extends RecyclerView.Adapter<RecipesViewHolder> {
     private List<RecipeEntry> recipeEntries;
@@ -45,12 +48,15 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull RecipesViewHolder holder, int position) {
-
         RecipeEntry recipeEntry = recipeEntries.get(position);
         holder.title.setText(recipeEntry.getTitle());
         holder.setOnRecipeClickListener(onRecipeClickListener);
         holder.setRecipeEntries(recipeEntries);
         holder.itemView.setTag(recipeEntry.getRowId());
+        Picasso.get()
+                .load(recipeEntry.getImagesUrls()[ZERO])
+                .error(android.R.drawable.stat_notify_error)
+                .into(holder.recipeImage);
     }
 
     @Override
@@ -64,4 +70,5 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesViewHolder> {
         this.recipeEntries = recipeEntries;
         notifyDataSetChanged();
     }
+
 }

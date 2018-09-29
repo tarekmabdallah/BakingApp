@@ -17,6 +17,7 @@ package com.gmail.tarekmabdallah91.bakingapp.adapters.main_activity_adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.gmail.tarekmabdallah91.bakingapp.R;
@@ -31,19 +32,13 @@ public class RecipesViewHolder extends RecyclerView.ViewHolder implements View.O
 
     @BindView(R.id.title)
     TextView title;
-    /*@BindView(R.id.ingredients)
-    TextView ingredients;
-    @BindView(R.id.instructions)
-    TextView instructions;
-    @BindView(R.id.images)
-    TextView images;
-    @BindView(R.id.videos)
-    TextView videos;*/
+    @BindView(R.id.recipe_image)
+    ImageView recipeImage;
 
     private List<RecipeEntry> recipeEntries;
     private OnRecipeClickListener onRecipeClickListener;
 
-    public RecipesViewHolder(View itemView) {
+    RecipesViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
         itemView.setOnClickListener(this);
@@ -56,19 +51,11 @@ public class RecipesViewHolder extends RecyclerView.ViewHolder implements View.O
         onRecipeClickListener.onRecipeClicked(recipeEntry);
     }
 
-    public OnRecipeClickListener getOnRecipeClickListener() {
-        return onRecipeClickListener;
-    }
-
-    public void setOnRecipeClickListener(OnRecipeClickListener onRecipeClickListener) {
+    void setOnRecipeClickListener(OnRecipeClickListener onRecipeClickListener) {
         this.onRecipeClickListener = onRecipeClickListener;
     }
 
-    public List<RecipeEntry> getRecipeEntries() {
-        return recipeEntries;
-    }
-
-    public void setRecipeEntries(List<RecipeEntry> recipeEntries) {
+    void setRecipeEntries(List<RecipeEntry> recipeEntries) {
         this.recipeEntries = recipeEntries;
     }
 }

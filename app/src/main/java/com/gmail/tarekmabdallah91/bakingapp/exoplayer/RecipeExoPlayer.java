@@ -37,7 +37,7 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 
-public class RecipePlayer {
+public class RecipeExoPlayer {
 
     private final Context context;
     private SimpleExoPlayer player;
@@ -48,7 +48,7 @@ public class RecipePlayer {
     private boolean playWhenReady = false;
     private PlayerView playerView;
 
-    public RecipePlayer(Context context){
+    public RecipeExoPlayer(Context context) {
         this.context = context;
     }
 

@@ -21,6 +21,8 @@ import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.COMMA;
+
 @Entity(tableName = "recipes")
 public class RecipeEntry implements Parcelable {
 
@@ -134,4 +136,30 @@ public class RecipeEntry implements Parcelable {
         dest.writeString(images);
         dest.writeString(videos);
     }
+
+    public String[] getImagesUrls() {
+        String imagesUrls[] = null;
+        if (null != images) {
+            if (images.contains(COMMA)) { // more than one
+                imagesUrls = images.split(COMMA);
+            } else { // one image
+                imagesUrls = new String[]{images};
+            }
+        }
+        return imagesUrls;
+    }
+
+    public String[] getVideosUrls() {
+        String videosUrls[] = null;
+        if (null != videos) {
+            if (videos.contains(COMMA)) { // more than one
+                videosUrls = videos.split(COMMA);
+            } else { // one video link
+                videosUrls = new String[]{videos};
+            }
+        }
+        return videosUrls;
+    }
+
+
 }

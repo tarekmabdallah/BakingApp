@@ -48,13 +48,13 @@ import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_PI
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_STRING_ID;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.VIDEOS_KEYWORD;
 
-public class PresenterRoom {
+public class RoomPresenter {
 
     private static RecipeDao recipeDao;
     private static UserDao userDao;
-    private static PresenterRoom instance;
+    private static RoomPresenter instance;
 
-    private PresenterRoom (Context context){
+    private RoomPresenter(Context context) {
         if (null == recipeDao){
             recipeDao = RecipeDatabase.getInstance(context).recipeDao();
         }
@@ -63,9 +63,9 @@ public class PresenterRoom {
         }
     }
 
-    static public PresenterRoom getInstance(Context context){
+    static public RoomPresenter getInstance(Context context) {
         if (null == instance){
-            instance = new PresenterRoom(context);
+            instance = new RoomPresenter(context);
         }
         return instance;
     }

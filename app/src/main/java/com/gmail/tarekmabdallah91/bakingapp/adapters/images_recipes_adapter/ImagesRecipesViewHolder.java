@@ -26,24 +26,16 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ImagesRecipesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class ImagesRecipesViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.image_recipes)
     ImageView imagesRecipesIV;
 
     private List<String> images;
-    private OnImagesRecipesClickListener onRecipeClickListener;
 
-    public ImagesRecipesViewHolder(View itemView) {
+    ImagesRecipesViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
-        itemView.setOnClickListener(this);
-    }
-
-    @Override
-    public void onClick(View v) {
-        int position = getAdapterPosition();
-        onRecipeClickListener.onImagesRecipesClicked(null);
     }
 
     public List<String> getImages() {
@@ -54,7 +46,4 @@ public class ImagesRecipesViewHolder extends RecyclerView.ViewHolder implements 
         this.images = images;
     }
 
-    public void setOnRecipeClickListener(OnImagesRecipesClickListener onRecipeClickListener) {
-        this.onRecipeClickListener = onRecipeClickListener;
-    }
 }

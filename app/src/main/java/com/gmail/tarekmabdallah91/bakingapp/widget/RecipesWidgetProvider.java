@@ -25,7 +25,7 @@ import android.widget.RemoteViews;
 import com.gmail.tarekmabdallah91.bakingapp.R;
 import com.gmail.tarekmabdallah91.bakingapp.activities.DetailsActivity;
 import com.gmail.tarekmabdallah91.bakingapp.activities.MainActivity;
-import com.gmail.tarekmabdallah91.bakingapp.data.room.PresenterRoom;
+import com.gmail.tarekmabdallah91.bakingapp.data.room.RoomPresenter;
 import com.gmail.tarekmabdallah91.bakingapp.models.RecipeEntry;
 
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.RECIPE_KEYWORD;
@@ -39,8 +39,8 @@ public class RecipesWidgetProvider extends AppWidgetProvider {
     private static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                         int appWidgetId) {
 
-        PresenterRoom.getInstance(context); // to set instance in the single tone then be ready to be used .
-        RecipeEntry lastRecipe = PresenterRoom.getLastRecipeEntry(context);
+        RoomPresenter.getInstance(context); // to set instance in the single tone then be ready to be used .
+        RecipeEntry lastRecipe = RoomPresenter.getLastRecipeEntry(context);
         String widgetText;
         Intent intent;
         if (lastRecipe != null) {

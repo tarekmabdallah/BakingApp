@@ -18,7 +18,7 @@ package com.gmail.tarekmabdallah91.bakingapp.fcm;
 import android.os.Bundle;
 
 import com.gmail.tarekmabdallah91.bakingapp.R;
-import com.gmail.tarekmabdallah91.bakingapp.data.room.PresenterRoom;
+import com.gmail.tarekmabdallah91.bakingapp.data.room.RoomPresenter;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -46,7 +46,7 @@ public class BakingFirebaseMessagingServices extends FirebaseMessagingService {
         // work when app is in foreground like Map
         Bundle data = remoteMessage.toIntent().getExtras();
         if (null != data ) Timber.d( getString(R.string.bundle_is_msg) ,data);
-        PresenterRoom.getInstance(this).getRecipeDataFromMessageStoreItInRoom(this, data, true);
+        RoomPresenter.getInstance(this).getRecipeDataFromMessageStoreItInRoom(this, data, true);
 
         // get the data from msg by keys then insert them to Room and show notification
         // to send JSON object it must be sent from customized server as FCM is only for some specified forms.

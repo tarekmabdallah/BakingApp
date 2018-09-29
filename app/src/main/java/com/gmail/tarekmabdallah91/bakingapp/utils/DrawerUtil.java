@@ -30,7 +30,6 @@ import com.gmail.tarekmabdallah91.bakingapp.R;
 import com.gmail.tarekmabdallah91.bakingapp.activities.EditProfileActivity;
 import com.gmail.tarekmabdallah91.bakingapp.activities.MainActivity;
 import com.gmail.tarekmabdallah91.bakingapp.activities.SettingsActivity;
-import com.gmail.tarekmabdallah91.bakingapp.data.room.PresenterRoom;
 import com.gmail.tarekmabdallah91.bakingapp.models.UserEntry;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -53,7 +52,7 @@ import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.ZERO;
 public class DrawerUtil {
     public static void getDrawer(final Activity activity, Toolbar toolbar) {
 
-        UserEntry user = PresenterRoom.getLastUserEntry(activity);
+        UserEntry user = null;//= RoomPresenter.getLastUserEntry(activity);
         String title;
         String subTitle;
         Bitmap image = null;

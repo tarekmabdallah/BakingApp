@@ -46,8 +46,6 @@ public class ImagesRecipesAdapter extends RecyclerView.Adapter<ImagesRecipesView
     @Override
     public void onBindViewHolder(@NonNull ImagesRecipesViewHolder holder, int position) {
 
-        holder.setOnRecipeClickListener(onRecipeClickListener);
-
         String url = imagesUrls[position];
         Picasso.get().load(url)
                 .error(android.R.drawable.stat_notify_error)

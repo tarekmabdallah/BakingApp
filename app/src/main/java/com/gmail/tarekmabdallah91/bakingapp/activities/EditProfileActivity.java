@@ -25,11 +25,9 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -42,7 +40,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.gmail.tarekmabdallah91.bakingapp.R;
-import com.gmail.tarekmabdallah91.bakingapp.data.room.PresenterRoom;
+import com.gmail.tarekmabdallah91.bakingapp.data.room.RoomPresenter;
 import com.gmail.tarekmabdallah91.bakingapp.models.UserEntry;
 import com.gmail.tarekmabdallah91.bakingapp.utils.BitmapUtils;
 import com.gmail.tarekmabdallah91.bakingapp.utils.DrawerUtil;
@@ -92,8 +90,7 @@ import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_ST
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.ZERO;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.ZOOM_RATIO;
 
-public class EditProfileActivity extends AppCompatActivity
-        implements /*NavigationView.OnNavigationItemSelectedListener,*/ OnMapReadyCallback {
+public class EditProfileActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final String TAG = EditProfileActivity.class.getSimpleName();
 
@@ -101,10 +98,7 @@ public class EditProfileActivity extends AppCompatActivity
     View layout_activity;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.drawer_layout)
-    DrawerLayout drawer;
-    @BindView(R.id.nav_view)
-    NavigationView navigationView;
+
     @BindView(R.id.profile_picture)
     ImageView profilePictureIv;
     @BindView(R.id.take_picture)
@@ -142,7 +136,7 @@ public class EditProfileActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTheme(ThemesUtils.getThemeByKey(this)); // must be before setContentView() to set theme
-        setContentView(R.layout.base_activity);
+        setContentView(R.layout.base_layout);
         ButterKnife.bind(this);
 
         setUI();
@@ -152,7 +146,7 @@ public class EditProfileActivity extends AppCompatActivity
         initiateValues();
         layout_activity.setVisibility(VISIBLE);
         setSupportActionBar(toolbar);
-        setNavBar();
+
         setMap();
         if (null != user) { // may be null if there is not any entry in userDb
             Glide.with(this).load(user.getUserBitmap(this)).into(profilePictureIv); // set image view
@@ -169,17 +163,8 @@ public class EditProfileActivity extends AppCompatActivity
 
     private void initiateValues() {
         userData = new Bundle();
-        user = PresenterRoom.getLastUserEntry(this);
+        user = RoomPresenter.getLastUserEntry(this);
         getUserGender(); // get gender should be here to listen to all changes
-    }
-
-    private void setNavBar() {
-        setSupportActionBar(toolbar);
-//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-//                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-//        drawer.addDrawerListener(toggle);
-//        toggle.syncState();
-//        navigationView.setNavigationItemSelectedListener(this);
     }
 
 
@@ -312,19 +297,16 @@ public class EditProfileActivity extends AppCompatActivity
     @OnClick(R.id.save_btn)
     void onClickSaveUserData() {
         // check if user selected / captured photo ?
-        if (null == user // if != null that means that there is an image so continue and don't return
-                && null == userData.getString(USER_PICTURE_PATH)
-                && null == userData.getString(USER_PICTURE_URI)) {
-            UserDataUtils.showToastMsg(this, getString(R.string.photo_required_msg));
-            return;
-        }
-        // if the user didn't change the image then put it's path/uri in the userData again
-        // because when user click on save btn it get all new data and reset the user data again
-        if (null != user
-                && (null == userData.getString(USER_PICTURE_PATH)
-                && null == userData.getString(USER_PICTURE_URI))) {
-            userData.putString(USER_PICTURE_URI, user.getImageUrl());
-            userData.putString(USER_PICTURE_PATH, user.getImageFilePath());
+        if (null == userData.getString(USER_PICTURE_PATH) && null == userData.getString(USER_PICTURE_URI)) {
+            if (null == user) {// if != null that means that there is an image so continue and don't return
+                UserDataUtils.showToastMsg(this, getString(R.string.photo_required_msg));
+                return;
+            } else {
+                // if the user didn't change the image then put it's path/uri in the userData again
+                // because when user click on save btn it get all new data and reset the user data again
+                userData.putString(USER_PICTURE_URI, user.getImageUrl());
+                userData.putString(USER_PICTURE_PATH, user.getImageFilePath());
+            }
         }
 
         // get texts from EditTexts
@@ -346,7 +328,7 @@ public class EditProfileActivity extends AppCompatActivity
         }
 
         // when all values are valid save user data to Room then finish this activity
-        PresenterRoom.getInstance(this).setUserEntry(this, userData);
+        RoomPresenter.getInstance(this).setUserEntry(this, userData);
         finish();
     }
 
@@ -444,28 +426,6 @@ public class EditProfileActivity extends AppCompatActivity
         DrawerUtil.getDrawer(this, toolbar);
         if (ThemesUtils.isThemeChanged()) recreate(); // to reset the theme
     }
-
-//    @Override
-//    public void onBackPressed() {
-//        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-//        if (drawer.isDrawerOpen(GravityCompat.START)) {
-//            drawer.closeDrawer(GravityCompat.START);
-//        } else {
-//            super.onBackPressed();
-//        }
-//    }
-//
-//    @SuppressWarnings("StatementWithEmptyBody")
-//    @Override
-//    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//        // Handle navigation view item clicks here.
-//        int id = item.getItemId();
-//
-//        ThemesUtils.setNavSelections(this, id);
-//
-//        drawer.closeDrawer(GravityCompat.START);
-//        return true;
-//    }
 
     /**
      * runs when the actvity is created
