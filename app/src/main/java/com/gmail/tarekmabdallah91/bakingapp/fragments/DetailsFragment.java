@@ -1,3 +1,18 @@
+/*
+ Copyright 2018 tarekmabdallah91@gmail.com
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
 package com.gmail.tarekmabdallah91.bakingapp.fragments;
 
 import android.app.Activity;
@@ -41,8 +56,12 @@ public class DetailsFragment extends Fragment implements OnImagesRecipesClickLis
     TextView emptyTV;
     @BindView(R.id.title)
     TextView title;
+    @BindView(R.id.ingredients_label)
+    TextView ingredientsLabel;
     @BindView(R.id.ingredients)
     TextView ingredients;
+    @BindView(R.id.instructions_label)
+    TextView instructionsLabel;
     @BindView(R.id.instructions)
     TextView instructions;
     @BindView(R.id.no_videos_tv)
@@ -67,7 +86,6 @@ public class DetailsFragment extends Fragment implements OnImagesRecipesClickLis
     private ExoPlayer exoPlayer;
 
     public DetailsFragment() {
-
     }
 
     @Nullable
@@ -81,13 +99,14 @@ public class DetailsFragment extends Fragment implements OnImagesRecipesClickLis
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getComingIntents();
+        if (null == recipe) getComingIntents();
         setUI();
     }
 
 
     private void setUI() {
         context = getContext();
+        recipeExoPlayer = new RecipeExoPlayer(context);
         if (null != recipe) {
             makeUIVisible(true);
             title.setText(recipe.getTitle());
@@ -96,7 +115,6 @@ public class DetailsFragment extends Fragment implements OnImagesRecipesClickLis
             setImagesUrls();
             setVideosUrls();
             setImagesRecyclerView();
-            recipeExoPlayer = new RecipeExoPlayer(context);
         } else {
             makeUIVisible(false); // show empty msg only
         }
@@ -105,14 +123,18 @@ public class DetailsFragment extends Fragment implements OnImagesRecipesClickLis
     private void makeUIVisible(boolean value) {
         if (value) {
             title.setVisibility(VISIBLE);
+            instructionsLabel.setVisibility(VISIBLE);
             instructions.setVisibility(VISIBLE);
+            ingredientsLabel.setVisibility(VISIBLE);
             ingredients.setVisibility(VISIBLE);
             imagesRecyclerView.setVisibility(VISIBLE);
             playerView.setVisibility(VISIBLE);
             emptyTV.setVisibility(GONE);
         } else {
             title.setVisibility(GONE);
+            instructionsLabel.setVisibility(GONE);
             instructions.setVisibility(GONE);
+            ingredientsLabel.setVisibility(GONE);
             ingredients.setVisibility(GONE);
             imagesRecyclerView.setVisibility(GONE);
             playerView.setVisibility(GONE);
@@ -132,7 +154,7 @@ public class DetailsFragment extends Fragment implements OnImagesRecipesClickLis
     /**
      * to set recipe with coming intent if it wasn't = null
      */
-    private void getComingIntents() {
+    private void getComingIntents() { // when the app run on a mobile screen by screen
         Activity activity = getActivity();
         if (null != activity) {
             Intent comingIntent = activity.getIntent();
@@ -173,7 +195,7 @@ public class DetailsFragment extends Fragment implements OnImagesRecipesClickLis
     @Override
     public void onStart() {
         super.onStart();
-        if (Util.SDK_INT > SDK_MARSHMALLOW) {
+        if (Util.SDK_INT > SDK_MARSHMALLOW && null != videosUrls) {
             recipeExoPlayer.initializePlayerForDash(playerView, videosUrls);
         }
     }
@@ -197,10 +219,14 @@ public class DetailsFragment extends Fragment implements OnImagesRecipesClickLis
     @Override
     public void onResume() {
         super.onResume();
-        recipeExoPlayer.hideSystemUi();
-        if ((Util.SDK_INT <= SDK_MARSHMALLOW) || exoPlayer == null) {
+        if (null != recipeExoPlayer) recipeExoPlayer.hideSystemUi();
+        if ((Util.SDK_INT <= SDK_MARSHMALLOW || null == exoPlayer) && null != videosUrls) {
             exoPlayer = recipeExoPlayer.initializePlayerForDash(playerView, videosUrls);
         }
+    }
+
+    public void setRecipeEntry(RecipeEntry recipeEntry) {
+        this.recipe = recipeEntry;
     }
 
 }

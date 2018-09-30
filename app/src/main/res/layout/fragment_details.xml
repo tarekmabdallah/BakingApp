@@ -97,7 +97,9 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/exo_player_height"
             android:paddingBottom="@dimen/padding_bottom_details_activity"
-            app:layout_constraintTop_toBottomOf="@id/no_videos_tv"></com.google.android.exoplayer2.ui.PlayerView>
+            app:layout_constraintTop_toBottomOf="@id/no_videos_tv">
+
+        </com.google.android.exoplayer2.ui.PlayerView>
 
         <TextView
             android:id="@+id/no_videos_tv"
@@ -109,8 +111,7 @@
 
         <TextView
             android:id="@+id/empty_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/text_views_style"
             android:text="@string/empty_screen_msg"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

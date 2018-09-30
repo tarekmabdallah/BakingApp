@@ -90,8 +90,8 @@ limitations under the License.
     <string name="select_your_location_label">Select your location</string>
     <string name="select_gender_label">Gender :</string>
     <string name="photo_required_msg">Sorry ! you must select/take a photo !</string>
-    <string name="no_data_msg">no data</string>
-    <string name="empty_screen_msg">Please select a recipe to display it\\\'s details</string>
+    <string name="no_data_msg">Sorry! There is not any recipe now/n come back later!</string>
+    <string name="empty_screen_msg">Please select a recipe to display it\'s details</string>
     <string name="description_recipe_image">description_recipe_image</string>
     <string name="required_msg">Required !</string>
 </resources>

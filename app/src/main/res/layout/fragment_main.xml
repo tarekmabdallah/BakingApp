@@ -24,6 +24,15 @@
     tools:context=".activities.MainActivity"
     tools:showIn="@layout/base_layout">
 
+    <TextView
+        android:id="@+id/empty_tv"
+        style="@style/text_views_style"
+        android:text="@string/no_data_msg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <app:android.support.v7.widget.RecyclerView
         android:id="@+id/rv_recipes"
         android:layout_width="match_parent"

@@ -35,6 +35,9 @@ public interface RecipeDao {
     @Query("SELECT * FROM recipes ORDER BY `rowId` DESC LIMIT 1")
     RecipeEntry getLastRecipeEntry ();
 
+    @Query("SELECT * FROM recipes ORDER BY `rowId` ASC LIMIT 1")
+    RecipeEntry getFirstRecipeEntry();
+
     @Insert
     void insertRecipe (RecipeEntry recipeEntry);
 

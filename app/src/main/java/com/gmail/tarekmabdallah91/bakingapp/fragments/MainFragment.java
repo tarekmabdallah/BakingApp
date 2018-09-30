@@ -1,3 +1,18 @@
+/*
+ Copyright 2018 tarekmabdallah91@gmail.com
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
 package com.gmail.tarekmabdallah91.bakingapp.fragments;
 
 import android.arch.lifecycle.Observer;
@@ -14,11 +29,13 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gmail.tarekmabdallah91.bakingapp.R;
 import com.gmail.tarekmabdallah91.bakingapp.activities.DetailsActivity;
 import com.gmail.tarekmabdallah91.bakingapp.adapters.main_activity_adapter.OnRecipeClickListener;
+import com.gmail.tarekmabdallah91.bakingapp.adapters.main_activity_adapter.OnRecipeClickedOnFragment;
 import com.gmail.tarekmabdallah91.bakingapp.adapters.main_activity_adapter.RecipesAdapter;
 import com.gmail.tarekmabdallah91.bakingapp.data.room.RoomPresenter;
 import com.gmail.tarekmabdallah91.bakingapp.data.room.recipe.RecipeViewModel;
@@ -29,21 +46,31 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static android.widget.LinearLayout.HORIZONTAL;
 import static android.widget.LinearLayout.VERTICAL;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.ZERO;
 
 public class MainFragment extends Fragment implements OnRecipeClickListener {
 
-
+    @BindView(R.id.empty_tv)
+    TextView emptyTV;
     @BindView(R.id.rv_recipes)
     RecyclerView recyclerView;
 
     private Context context;
     private RecipesAdapter adapter;
     private RoomPresenter roomPresenter;
+    private OnRecipeClickedOnFragment callbacks;
+
+
+    public MainFragment() {
+
+    }
 
     @Nullable
     @Override
@@ -64,6 +91,24 @@ public class MainFragment extends Fragment implements OnRecipeClickListener {
         context = getContext();
         adapter = new RecipesAdapter(this);
         roomPresenter = RoomPresenter.getInstance(context);
+    }
+
+    /**
+     * Override onAttach to make sure that the container activity has implemented the callback
+     *
+     * @param context -
+     */
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        // This makes sure that the host activity has implemented the callback interface
+        // If not, it throws an exception
+        try {
+            callbacks = (OnRecipeClickedOnFragment) context;
+        } catch (ClassCastException e) {
+            Timber.e(e);
+        }
+
     }
 
     private void setUI() {
@@ -117,8 +162,12 @@ public class MainFragment extends Fragment implements OnRecipeClickListener {
             public void onChanged(@Nullable List<RecipeEntry> recipeEntries) {
                 // update UI
                 if (null == recipeEntries || recipeEntries.isEmpty()) {
+                    recyclerView.setVisibility(GONE);
+                    emptyTV.setVisibility(VISIBLE);
                     Toast.makeText(context, R.string.no_data_msg, Toast.LENGTH_LONG).show();
                 } else {
+                    emptyTV.setVisibility(GONE);
+                    recyclerView.setVisibility(VISIBLE);
                     adapter.swapList(recipeEntries);
                 }
             }
@@ -127,10 +176,14 @@ public class MainFragment extends Fragment implements OnRecipeClickListener {
 
     @Override
     public void onRecipeClicked(RecipeEntry recipeEntry) {
-        Intent openDetailsActivity = new Intent(context, DetailsActivity.class);
-        openDetailsActivity.putExtra(BakingConstants.RECIPE_KEYWORD, recipeEntry);
-        startActivity(openDetailsActivity);
-    }
+        if (getActivity().findViewById(R.id.fragment_master_sw600) == null) {
+            Intent openDetailsActivity = new Intent(context, DetailsActivity.class);
+            openDetailsActivity.putExtra(BakingConstants.RECIPE_KEYWORD, recipeEntry);
+            startActivity(openDetailsActivity);
+        } else {
+            callbacks.onRecipeClickedOnFragment(recipeEntry);
+        }
 
+    }
 
 }
