@@ -22,103 +22,39 @@
     android:layout_height="match_parent"
     tools:context=".activities.DetailsActivity">
 
+
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/padding1"
-        android:padding="@dimen/padding1">
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/title"
-            style="@style/title_style"
+        <!-- to display images recipes -->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/images_recipe_rv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_margin="@dimen/padding2"
+            android:padding="@dimen/padding2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:layout_editor_absoluteY="39dp"
-            tools:text="@string/recipe_title" />
-
-        <TextView
-            android:id="@+id/no_images_tv"
-            style="@style/text_views_style"
-            android:layout_marginTop="@dimen/padding2"
-            android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@+id/title"
-            tools:text="@string/no_videos_msg" />
-
-        <!-- to display images horizontally -->
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/images_rv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/padding1"
-            app:layout_constraintTop_toBottomOf="@id/no_images_tv">
+            app:layout_constraintTop_toTopOf="parent">
 
         </android.support.v7.widget.RecyclerView>
 
-        <TextView
-            android:id="@+id/ingredients_label"
-            style="@style/labels_style"
-            android:layout_marginTop="@dimen/padding2"
-            android:text="@string/ingredients_label"
+        <!-- to display steps -->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/steps_rv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/padding2"
+            android:padding="@dimen/padding2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/images_rv" />
+            app:layout_constraintTop_toBottomOf="@id/images_recipe_rv">
 
-        <TextView
-            android:id="@+id/ingredients"
-            style="@style/text_views_style"
-            android:layout_marginTop="@dimen/padding2"
-            app:layout_constraintEnd_toEndOf="@+id/ingredients_label"
-            app:layout_constraintStart_toStartOf="@+id/ingredients_label"
-            app:layout_constraintTop_toBottomOf="@+id/ingredients_label"
-            tools:text="@string/ingredients" />
-
-        <TextView
-            android:id="@+id/instructions_label"
-            style="@style/labels_style"
-            android:layout_marginTop="@dimen/padding2"
-            android:text="@string/instructions_label"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ingredients" />
-
-        <TextView
-            android:id="@+id/instructions"
-            style="@style/text_views_style"
-            android:layout_marginTop="@dimen/padding2"
-            app:layout_constraintEnd_toEndOf="@+id/instructions_label"
-            app:layout_constraintStart_toStartOf="@+id/instructions_label"
-            app:layout_constraintTop_toBottomOf="@+id/instructions_label"
-            tools:text="@string/instructions" />
-
-        <com.google.android.exoplayer2.ui.PlayerView
-            android:id="@+id/exo_player"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/exo_player_height"
-            android:paddingBottom="@dimen/padding_bottom_details_activity"
-            app:layout_constraintTop_toBottomOf="@id/no_videos_tv">
-
-        </com.google.android.exoplayer2.ui.PlayerView>
-
-        <TextView
-            android:id="@+id/no_videos_tv"
-            style="@style/text_views_style"
-            android:layout_marginTop="@dimen/padding2"
-            android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@+id/instructions"
-            tools:text="@string/no_videos_msg" />
-
-        <TextView
-            android:id="@+id/empty_tv"
-            style="@style/text_views_style"
-            android:text="@string/empty_screen_msg"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
+        </android.support.v7.widget.RecyclerView>
 
     </android.support.constraint.ConstraintLayout>
 
 </ScrollView>
+
+

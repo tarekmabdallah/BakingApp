@@ -20,16 +20,30 @@ public interface BakingConstants {
 
     String RECIPE_KEYWORD = "recipe";
     String TITLE_KEYWORD = "title";
+    String NAME_KEYWORD = "name";
+    String ID_KEYWORD = "id";
+    String SERVING_KEYWORD = "serving";
     String INSTRUCTIONS_KEYWORD = "instructions";
+    String STEPS_KEYWORD = "steps";
     String INGREDIENTS_KEYWORD = "ingredients";
     String VIDEOS_KEYWORD = "videos";
+    String QUANTITY_KEYWORD = "quantity";
+    String MEASURE_KEYWORD = "measure";
+    String INGREDIENT_KEYWORD = "ingredient";
+    String SHORT_DESCRIPTION_KEYWORD = "shortDescription";
+    String DESCRIPTION_KEYWORD = "description";
+    String VIDEO_URL = "videoURL";
+    String THUMBNAIL_URL = "thumbnailURL";
     String IMAGES_KEYWORD = "images";
+    String POSITION_KEYWORD = "position";
     String NOTIFICATION_CHANNEL_STRING_ID = "Baking Notification";
     String PROVIDER_AUTHORITY = "com.gmail.tarekmabdallah91.bakingapp.provider";
     String DATE_PATTERN = "yyyyMMdd_HHmmss";
     String IMAGE_FILE_NAME = "IMG_%s_";
     String IMAGE_SUFFIX = ".jpg";
     String IMAGE_INTENT_TYPE = "image/*";
+    String CHARSET_NAME = "UTF-8";
+    String SAMPLE_RECIPES_JSON_FILE_NAME = "sample_recipes.json";
 
     String USER_FIRST_NAME = "USER_FIRST_NAME";
     String USER_LAST_NAME = "USER_LAST_NAME";

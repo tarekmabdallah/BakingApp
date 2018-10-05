@@ -32,6 +32,9 @@ public interface RecipeDao {
     @Query("SELECT * FROM recipes")
     LiveData<List<RecipeEntry>> loadAllRecipes ();
 
+    @Query("SELECT * FROM recipes")
+    List<RecipeEntry> loadAllRecipesTogetCount();
+
     @Query("SELECT * FROM recipes ORDER BY `rowId` DESC LIMIT 1")
     RecipeEntry getLastRecipeEntry ();
 

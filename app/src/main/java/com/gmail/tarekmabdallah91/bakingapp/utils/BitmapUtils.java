@@ -21,6 +21,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Environment;
+import android.util.Log;
 
 import com.gmail.tarekmabdallah91.bakingapp.R;
 
@@ -31,8 +32,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import timber.log.Timber;
-
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.DATE_PATTERN;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.IMAGE_FILE_NAME;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.IMAGE_SUFFIX;
@@ -41,6 +40,7 @@ import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.TWO;
 
 public class BitmapUtils {
 
+    private static final String TAG = BitmapUtils.class.getSimpleName();
 
     public static File createImageFile(Context context) throws IOException {
         String timeStamp =
@@ -49,7 +49,7 @@ public class BitmapUtils {
         String imageFileName = String.format(IMAGE_FILE_NAME, timeStamp);
         File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         if (storageDir != null) {
-            Timber.v(context.getString(R.string.storage_dir_msg), storageDir.getAbsolutePath());
+            Log.d(TAG, String.format(context.getString(R.string.storage_dir_msg), storageDir.getAbsolutePath()));
         }
         return File.createTempFile(
                 imageFileName,        /* prefix */

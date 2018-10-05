@@ -16,9 +16,9 @@
      */
      -->
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent">
 
     <include layout="@layout/toolbar_layout" />
@@ -32,11 +32,10 @@
         tools:context=".activities.MainActivity">
 
         <FrameLayout
-            android:id="@+id/container_content_main"
+            android:id="@+id/container_content_details"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />
-
 
         <View
             android:layout_width="1dp"
@@ -51,7 +50,7 @@
             android:orientation="vertical">
 
             <FrameLayout
-                android:id="@+id/container_content_details"
+                android:id="@+id/container_content_recipes_steps"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 

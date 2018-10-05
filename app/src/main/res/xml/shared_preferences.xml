@@ -19,14 +19,14 @@
 
     <PreferenceCategory
         android:key="@string/themes_category_key"
-        android:title="@string/themes_title_category_preferences">
+        android:name="@string/themes_title_category_preferences">
 
         <ListPreference
             android:defaultValue="@string/value_color_white"
             android:entries="@array/keys_list_colors"
             android:entryValues="@array/values_list_colors"
             android:key="@string/key_background_color_list"
-            android:title="@string/title_list_background_colors">
+            android:name="@string/title_list_background_colors">
 
         </ListPreference>
 

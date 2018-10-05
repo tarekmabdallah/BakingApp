@@ -19,30 +19,31 @@ import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
+import android.util.Log;
 
 import com.gmail.tarekmabdallah91.bakingapp.R;
 import com.gmail.tarekmabdallah91.bakingapp.models.RecipeEntry;
 
-import timber.log.Timber;
 
 @Database(entities = {RecipeEntry.class} , version = 1 ,exportSchema = false)
 public abstract class RecipeDatabase extends RoomDatabase{
 
     private static RecipeDatabase instance;
     private static final String DB_NAME = "recipesDb";
-    private final static Object LOCK = new Object();
+    private static final Object LOCK = new Object();
+    private static final String TAG = RecipeDatabase.class.getSimpleName();
 
     public static RecipeDatabase getInstance(Context context){
         if (null == instance){
             synchronized (LOCK){ // TODO - to understand what is that "synchronized (LOCK)"
-                Timber.v(context.getString(R.string.creating_new_db_instance_msg));
+                Log.d(TAG, context.getString(R.string.creating_new_db_instance_msg));
                 instance = Room.databaseBuilder(context.getApplicationContext()
                         , RecipeDatabase.class
                         , RecipeDatabase.DB_NAME)
                         .build();
             }
         }
-        Timber.v(context.getString(R.string.getting_db_instance_msg));
+        Log.d(TAG, context.getString(R.string.getting_db_instance_msg));
         return instance;
     }
 

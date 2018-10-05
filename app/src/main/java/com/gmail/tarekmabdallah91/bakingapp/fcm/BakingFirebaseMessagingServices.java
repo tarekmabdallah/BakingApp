@@ -16,16 +16,19 @@
 package com.gmail.tarekmabdallah91.bakingapp.fcm;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.gmail.tarekmabdallah91.bakingapp.R;
 import com.gmail.tarekmabdallah91.bakingapp.data.room.RoomPresenter;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import timber.log.Timber;
+import java.util.Map;
+
 
 public class BakingFirebaseMessagingServices extends FirebaseMessagingService {
 
+    private static final String TAG = BakingFirebaseMessagingServices.class.getSimpleName();
     /**
      * to get the token of the device
      * @param token is the token
@@ -33,38 +36,35 @@ public class BakingFirebaseMessagingServices extends FirebaseMessagingService {
     @Override
     public void onNewToken(String token) {
         super.onNewToken(token);
-        Timber.d(getString(R.string.token_is), token);
+        Log.d(TAG, String.format(getString(R.string.token_is), token));
     }
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
-        Timber.d(remoteMessage.getFrom());
-        Timber.d( getString(R.string.notification_type_and_id_msg) ,remoteMessage.getMessageType() , remoteMessage.getMessageId());
+        Log.d(TAG, remoteMessage.getFrom());
+        Log.d(TAG, String.format(getString(R.string.notification_type_and_id_msg),
+                remoteMessage.getMessageType(), remoteMessage.getMessageId()));
 
-        // work when app is in foreground like Map
+        // work when app is in foreground
         Bundle data = remoteMessage.toIntent().getExtras();
-        if (null != data ) Timber.d( getString(R.string.bundle_is_msg) ,data);
+        if (null != data) Log.d(TAG, String.format(getString(R.string.bundle_is_msg), data));
         RoomPresenter.getInstance(this).getRecipeDataFromMessageStoreItInRoom(this, data, true);
 
         // get the data from msg by keys then insert them to Room and show notification
         // to send JSON object it must be sent from customized server as FCM is only for some specified forms.
 
-        // example of notification and it's keys
-//        Map<String , String> data = remoteMessage.getData();
-//        if (null != data && !data.isEmpty()){
-//            Timber.d( getString(R.string.data_is) ,data.toString());
-//            String title = data.get("title");
-//            String instructions = data.get("instructions");
-//            String ingredients =  data.get("ingredients");
-//            String videos =  data.get("videos");
-//            String images =  data.get("images");
-//            RecipeEntry recipeEntry = new RecipeEntry(title,ingredients,instructions,images,videos);
-//            insertDataToRoom(recipeEntry);
-//            String[] notificationContents = {title, instructions};
-//            NotificationUtils.startNotification(this,notificationContents);
-//        }
-
+        // example of notification and it's keys is like Map<Key,value>
+//        "id": 1,
+//        "name": "Nutella Pie",
+//        "ingredients":[] ,
+//        "steps":[],
+//        "servings": 8,
+//        "image": ""
+        Map<String, String> bodyMsg = remoteMessage.getData();
+        if (null != bodyMsg && !bodyMsg.isEmpty()) {
+            RoomPresenter.getInstance(this).getRecipeDataFromMapStoreItInRoom(this, bodyMsg, true);
+        }
     }
 }

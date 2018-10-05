@@ -30,8 +30,8 @@ import butterknife.ButterKnife;
 
 public class RecipesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    @BindView(R.id.title)
-    TextView title;
+    @BindView(R.id.name)
+    TextView name;
     @BindView(R.id.recipe_image)
     ImageView recipeImage;
 

@@ -16,14 +16,13 @@
 package com.gmail.tarekmabdallah91.bakingapp.utils;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.gmail.tarekmabdallah91.bakingapp.R;
 
 import java.util.Random;
-
-import timber.log.Timber;
 
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.EMPTY_TEXT;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.LETTERS_ONLY_REGEX;
@@ -33,6 +32,7 @@ import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_ST
 public class UserDataUtils {
 
 
+    private static final String TAG = UserDataUtils.class.getSimpleName();
     /**
      * get text from edit texts
      * check the value
@@ -54,7 +54,7 @@ public class UserDataUtils {
     private static String checkTexts(Context context, String text) {
         String newText = EMPTY_TEXT;
         if (null != text && !text.isEmpty()) {
-            Timber.d(context.getString(R.string.text_is_msg), text);
+            Log.d(TAG, String.format(context.getString(R.string.text_is_msg), text));
             if (text.matches(LETTERS_ONLY_REGEX)) {
                 newText = text;
             }

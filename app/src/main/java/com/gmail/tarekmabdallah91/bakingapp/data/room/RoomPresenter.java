@@ -19,6 +19,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.gmail.tarekmabdallah91.bakingapp.R;
 import com.gmail.tarekmabdallah91.bakingapp.data.room.recipe.RecipeDao;
@@ -29,15 +30,19 @@ import com.gmail.tarekmabdallah91.bakingapp.models.RecipeEntry;
 import com.gmail.tarekmabdallah91.bakingapp.models.UserEntry;
 import com.gmail.tarekmabdallah91.bakingapp.utils.NotificationUtils;
 
+import org.json.JSONObject;
+
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import timber.log.Timber;
-
+import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.ID_KEYWORD;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.IMAGES_KEYWORD;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.INGREDIENTS_KEYWORD;
-import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.INSTRUCTIONS_KEYWORD;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.LATITUDE_KEYWORD;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.LONGITUDE_KEYWORD;
+import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.NAME_KEYWORD;
+import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.SERVING_KEYWORD;
+import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.STEPS_KEYWORD;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.TITLE_KEYWORD;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_FIRST_NAME;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_GENDER;
@@ -46,10 +51,10 @@ import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_LO
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_PICTURE_PATH;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_PICTURE_URI;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_STRING_ID;
-import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.VIDEOS_KEYWORD;
 
 public class RoomPresenter {
 
+    private static final String TAG = RoomPresenter.class.getSimpleName();
     private static RecipeDao recipeDao;
     private static UserDao userDao;
     private static RoomPresenter instance;
@@ -71,30 +76,6 @@ public class RoomPresenter {
     }
 
     /**
-     *  to get the data from message when the app in background and receive a push notification then save it on the Room
-     * @param context -
-     * @param data bundle contains the RecipeEntry values
-     * @param showNotification because this method is used in different cases, one needs showing notifications and the other doesn't
-     */
-    final public void getRecipeDataFromMessageStoreItInRoom(final Context context, Bundle data , boolean showNotification){
-        if (null != data){
-            if (!data.isEmpty()){
-                Timber.d( context.getString(R.string.data_is) ,data.toString());
-                String title = data.getString(TITLE_KEYWORD);
-                String instructions = data.getString(INSTRUCTIONS_KEYWORD);
-                String ingredients =  data.getString(INGREDIENTS_KEYWORD);
-                String videos =  data.getString(VIDEOS_KEYWORD);
-                String images =  data.getString(IMAGES_KEYWORD);
-                RecipeEntry recipeEntry = new RecipeEntry(title,ingredients,instructions,images,videos);
-                insertRecipeDataToRoom(context , recipeEntry);
-                if (showNotification){
-                    NotificationUtils.startNotification(context,recipeEntry);
-                }
-            }
-        }
-    }
-
-    /**
      * to insert data to Room
      * @param RECIPE_ENTRY as a row to be inserted
      */
@@ -103,24 +84,7 @@ public class RoomPresenter {
             @Override
             protected Void doInBackground(Void... voids) {
                 recipeDao.insertRecipe(RECIPE_ENTRY);
-                Timber.v(context.getString(R.string.new_row_inserted_msg));
-                return null;
-            }
-        };
-        insertNewRowInRoom.execute();
-    }
-
-    /**
-     * to delete data from Room
-     * @param id as an id for the row wanted to be deleted
-     */
-    final public void DeleteRecipeDataFromRoom(final Context context, final int id){
-         @SuppressLint("StaticFieldLeak")
-         AsyncTask<Void , Void , Void> insertNewRowInRoom = new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                recipeDao.deleteRecipe(id);
-                Timber.v(context.getString(R.string.new_row_inserted_msg));
+                Log.d(TAG, context.getString(R.string.new_row_inserted_msg));
                 return null;
             }
         };
@@ -136,7 +100,7 @@ public class RoomPresenter {
         AsyncTask<Void , Void , RecipeEntry> getLastRecipeEntry = new AsyncTask<Void, Void, RecipeEntry>() {
             @Override
             protected RecipeEntry doInBackground(Void... voids) {
-                Timber.v(context.getString(R.string.get_last_recipe_msg));
+                Log.d(TAG, context.getString(R.string.get_last_recipe_msg));
                 return recipeDao.getLastRecipeEntry();
             }
         };
@@ -161,7 +125,7 @@ public class RoomPresenter {
             @Override
             protected Void doInBackground(Void... voids) {
                 userDao.insertUser(USER_ENTRY);
-                Timber.v(context.getString(R.string.new_row_inserted_msg));
+                Log.d(TAG, context.getString(R.string.new_row_inserted_msg));
                 return null;
             }
         };
@@ -178,8 +142,121 @@ public class RoomPresenter {
         AsyncTask<Void, Void, UserEntry> getLastRecipeEntry = new AsyncTask<Void, Void, UserEntry>() {
             @Override
             protected UserEntry doInBackground(Void... voids) {
-                Timber.v(context.getString(R.string.get_last_recipe_msg));
+                Log.d(TAG, context.getString(R.string.get_last_recipe_msg));
                 return userDao.getLastUser();
+            }
+        };
+        getLastRecipeEntry.execute();
+        try {
+            return getLastRecipeEntry.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * to get the data from message when the app in background and receive a push notification then save it on the Room
+     *
+     * @param context          -
+     * @param data             bundle contains the RecipeEntry values
+     * @param showNotification because this method is used in different cases, one needs showing notifications and the other doesn't
+     */
+    final public void getRecipeDataFromMessageStoreItInRoom(final Context context, Bundle data, boolean showNotification) {
+        if (null != data) {
+            if (!data.isEmpty()) {
+                Log.d(TAG, String.format(context.getString(R.string.data_is), data.toString()));
+                String name = data.getString(TITLE_KEYWORD);
+                String steps = data.getString(STEPS_KEYWORD);
+                String ingredients = data.getString(INGREDIENTS_KEYWORD);
+                String image = data.getString(IMAGES_KEYWORD);
+                int recipeId = Integer.parseInt(data.getString(ID_KEYWORD));
+                int serving = Integer.parseInt(data.getString(SERVING_KEYWORD));
+                RecipeEntry recipeEntry = new RecipeEntry(recipeId, name, ingredients, steps, image, serving);
+                insertRecipeDataToRoom(context, recipeEntry);
+                if (showNotification) {
+                    NotificationUtils.startNotification(context, recipeEntry);
+                }
+            }
+        }
+    }
+
+    /**
+     * to get the data from message when the app in foreground and receive a data message then save it on the Room
+     *
+     * @param context          -
+     * @param bodyMsg          Map contains the RecipeEntry values
+     * @param showNotification because this method is used in different cases, one needs showing notifications and the other doesn't
+     */
+    final public void getRecipeDataFromMapStoreItInRoom(final Context context, Map<String, String> bodyMsg, boolean showNotification) {
+        if (null != bodyMsg) {
+            if (!bodyMsg.isEmpty()) {
+                Log.d(TAG, String.format(context.getString(R.string.data_is), bodyMsg.toString()));
+                int recipeId = Integer.parseInt(bodyMsg.get(ID_KEYWORD));
+                String name = bodyMsg.get(NAME_KEYWORD);
+                // to be sure that the value of both od keys ingredients and steps sre converted to String
+                String ingredients = bodyMsg.get(INGREDIENTS_KEYWORD);
+                String steps = bodyMsg.get(STEPS_KEYWORD);
+                int serving = Integer.parseInt(bodyMsg.get(SERVING_KEYWORD));
+                String image = bodyMsg.get(IMAGES_KEYWORD);
+                RecipeEntry recipeEntry = new RecipeEntry(recipeId, name, ingredients, steps, image, serving);
+                insertRecipeDataToRoom(context, recipeEntry);
+                if (showNotification) {
+                    NotificationUtils.startNotification(context, recipeEntry);
+                }
+            }
+        }
+    }
+
+    /**
+     * to get the data from assets then save it on the Room
+     *
+     * @param context          -
+     * @param recipeJsonObject contains the RecipeEntry values
+     */
+    final public void getRecipeDataFromJsonStoreItInRoom(final Context context, JSONObject recipeJsonObject) {
+        int id = recipeJsonObject.optInt(ID_KEYWORD);
+        int serving = recipeJsonObject.optInt(SERVING_KEYWORD);
+        String name = recipeJsonObject.optString(NAME_KEYWORD);
+        String images = recipeJsonObject.optString(IMAGES_KEYWORD);
+        String ingredients = recipeJsonObject.optString(INGREDIENTS_KEYWORD);
+        String steps = recipeJsonObject.optString(STEPS_KEYWORD);
+        RecipeEntry recipeEntry = new RecipeEntry(id, name, ingredients, steps, images, serving);
+        insertRecipeDataToRoom(context, recipeEntry);
+    }
+
+    /**
+     * to delete data from Room
+     *
+     * @param id as an id for the row wanted to be deleted
+     */
+    final public void DeleteRecipeDataFromRoom(final Context context, final int id) {
+        @SuppressLint("StaticFieldLeak")
+        AsyncTask<Void, Void, Void> insertNewRowInRoom = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                recipeDao.deleteRecipe(id);
+                Log.d(TAG, context.getString(R.string.new_row_inserted_msg));
+                return null;
+            }
+        };
+        insertNewRowInRoom.execute();
+    }
+
+    /**
+     * to get recipes count in the Room to check if only the room is empty then load the samples recipes in assets
+     *
+     * @param context to get strings for timber
+     * @return last Recipe Entry
+     */
+    public Integer getRecipesCount(final Context context) {
+        AsyncTask<Void, Void, Integer> getLastRecipeEntry = new AsyncTask<Void, Void, Integer>() {
+            @Override
+            protected Integer doInBackground(Void... voids) {
+                Log.d(TAG, context.getString(R.string.get_last_recipe_msg));
+                return recipeDao.loadAllRecipesTogetCount().size();
             }
         };
         getLastRecipeEntry.execute();

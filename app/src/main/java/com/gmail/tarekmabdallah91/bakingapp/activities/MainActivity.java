@@ -15,88 +15,124 @@
  */
 package com.gmail.tarekmabdallah91.bakingapp.activities;
 
+
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gmail.tarekmabdallah91.bakingapp.R;
+import com.gmail.tarekmabdallah91.bakingapp.adapters.main_activity_adapter.OnRecipeClickListener;
 import com.gmail.tarekmabdallah91.bakingapp.adapters.main_activity_adapter.OnRecipeClickedOnFragment;
+import com.gmail.tarekmabdallah91.bakingapp.adapters.main_activity_adapter.RecipesAdapter;
 import com.gmail.tarekmabdallah91.bakingapp.data.room.RoomPresenter;
-import com.gmail.tarekmabdallah91.bakingapp.fragments.DetailsFragment;
-import com.gmail.tarekmabdallah91.bakingapp.fragments.MainFragment;
+import com.gmail.tarekmabdallah91.bakingapp.data.room.recipe.RecipeViewModel;
 import com.gmail.tarekmabdallah91.bakingapp.models.RecipeEntry;
+import com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants;
 import com.gmail.tarekmabdallah91.bakingapp.utils.DrawerUtil;
+import com.gmail.tarekmabdallah91.bakingapp.utils.ScreenSizeUtils;
 import com.gmail.tarekmabdallah91.bakingapp.utils.ThemesUtils;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import timber.log.Timber;
 
-import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.RECIPE_KEYWORD;
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.ZERO;
 
-// TODO 4 to adjust UI and change widget example & add selector
+
 // TODO 5 to add essprsso
 // TODO 6 apply mvp model
 
-public class MainActivity extends AppCompatActivity implements OnRecipeClickedOnFragment {
+public class MainActivity extends AppCompatActivity implements OnRecipeClickListener {
 
+    @BindView(R.id.layout_activity_main)
+    View layout_activity;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.empty_tv)
+    TextView emptyTV;
+    @BindView(R.id.rv_recipes)
+    RecyclerView recyclerView;
 
-    private boolean twoPane = false;
-    private static Bundle lastInsertedData;
+    private RecipesAdapter adapter;
     private RoomPresenter roomPresenter;
-    private RecipeEntry recipeEntry;
-
+    private OnRecipeClickedOnFragment callbacks;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTheme(ThemesUtils.getThemeByKey(this)); // must be before setContentView() to set theme
-        setContentView(R.layout.content_main);
-        ButterKnife.bind(this);
-        Timber.plant(new Timber.DebugTree());
-        setSupportActionBar(toolbar);
-        DrawerUtil.getDrawer(this, toolbar);
-        roomPresenter = RoomPresenter.getInstance(this);
+        setContentView(R.layout.base_layout);
 
-        if (findViewById(R.id.fragment_master_sw600) != null
-                || getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            twoPane = true;
-            // not recommended to make it global to let the fragments replaced easily
-            FragmentManager fragmentManager = getSupportFragmentManager();
-
-            // initiate and commitNow the mainFragment
-            MainFragment mainFragment = new MainFragment();
-            fragmentManager.beginTransaction().replace(R.id.container_content_main, mainFragment).commitNow();
-
-            // initiate and commitNow detailsFragment after setting it by recipeEntry as it's state
-            DetailsFragment detailsFragment = new DetailsFragment();
-            if (savedInstanceState != null)
-                recipeEntry = savedInstanceState.getParcelable(RECIPE_KEYWORD);
-            detailsFragment.setRecipeEntry(recipeEntry);
-            fragmentManager.beginTransaction().add(R.id.container_content_details, detailsFragment).commitNow();
-        }
-
-        // to get data from notification message while app is running in background
-        getDataFromNotificationMessage();
+        setUI();
+        setViewModel();
     }
 
-    /**
-     * to get data from notification message while app is running in background
-     */
-    private void getDataFromNotificationMessage(){
-        Intent coming = getIntent();
-        if (null != coming){
-            Bundle data = coming.getExtras();
-            if (null == lastInsertedData || !lastInsertedData.equals(data)) {
-                // to avoid reloading and inserting data each time the device rotated
-                lastInsertedData = data;
-                roomPresenter.getRecipeDataFromMessageStoreItInRoom(this, data, false);
+    private void setUI() {
+        initiateValues();
+        layout_activity.setVisibility(VISIBLE); // set it visible after calling butter knife
+        setRecyclerView();
+    }
+
+    private void setRecyclerView() {
+        ScreenSizeUtils screenSizeUtils = new ScreenSizeUtils(this);
+        int spanCount = screenSizeUtils.calculateSpanCount();
+        recyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this, spanCount));
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(adapter);
+        ItemTouchHelper itemTouchHelper =
+                new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ZERO, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+                    @Override
+                    public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                        return false;
+                    }
+
+                    @Override
+                    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                        roomPresenter.DeleteRecipeDataFromRoom(getBaseContext(), (int) viewHolder.itemView.getTag());
+                    }
+                });
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+    }
+
+    private void setViewModel() {
+
+        RecipeViewModel recipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
+        recipeViewModel.getRecipes().observe(this, new Observer<List<RecipeEntry>>() {
+            @Override
+            public void onChanged(@Nullable List<RecipeEntry> recipeEntries) {
+                // update UI
+                if (null == recipeEntries || recipeEntries.isEmpty()) {
+                    recyclerView.setVisibility(GONE);
+                    emptyTV.setVisibility(VISIBLE);
+                    Toast.makeText(getBaseContext(), R.string.no_data_msg, Toast.LENGTH_LONG).show();
+                } else {
+                    emptyTV.setVisibility(GONE);
+                    recyclerView.setVisibility(VISIBLE);
+                    adapter.swapList(recipeEntries);
+                }
             }
-        }
+        });
+    }
+
+    private void initiateValues() {
+        ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
+        DrawerUtil.getDrawer(this, toolbar);
+        adapter = new RecipesAdapter(this);
+        roomPresenter = RoomPresenter.getInstance(this);
     }
 
     @Override
@@ -106,20 +142,9 @@ public class MainActivity extends AppCompatActivity implements OnRecipeClickedOn
     }
 
     @Override
-    public void onRecipeClickedOnFragment(RecipeEntry recipeEntry) {
-        // if the tablet mode do this code ..
-        // TODO - to fix the recyclerView as it hides the 1st item when it is clicked !
-        if (twoPane) {
-            this.recipeEntry = recipeEntry;
-
-            FragmentManager fragmentManager = getSupportFragmentManager();
-
-            MainFragment mainFragment = new MainFragment(); // to reload the recycler view because 1st item disappears when clicked
-            fragmentManager.beginTransaction().replace(R.id.container_content_main, mainFragment).commitNow();
-
-            DetailsFragment detailsFragment = new DetailsFragment();
-            detailsFragment.setRecipeEntry(recipeEntry);
-            fragmentManager.beginTransaction().replace(R.id.container_content_details, detailsFragment).commitNow();
-        }
+    public void onRecipeClicked(RecipeEntry recipeEntry) {
+        Intent openDetailsActivity = new Intent(this, DetailsActivity.class);
+        openDetailsActivity.putExtra(BakingConstants.RECIPE_KEYWORD, recipeEntry);
+        startActivity(openDetailsActivity);
     }
 }

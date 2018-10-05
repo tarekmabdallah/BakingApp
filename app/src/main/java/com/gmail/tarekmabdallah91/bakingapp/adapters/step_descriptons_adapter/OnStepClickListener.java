@@ -13,8 +13,9 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package com.gmail.tarekmabdallah91.bakingapp.adapters.images_recipes_adapter;
+package com.gmail.tarekmabdallah91.bakingapp.adapters.step_descriptons_adapter;
 
-public interface OnImagesRecipesClickListener {
 
+public interface OnStepClickListener {
+    void onStepClicked(int position);
 }

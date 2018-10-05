@@ -20,15 +20,17 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/recipe_card_view_height"
     android:layout_gravity="center"
+    android:gravity="center"
     android:layout_margin="@dimen/padding1"
-    android:padding="@dimen/padding1">
+    android:padding="@dimen/padding1"
+    app:cardCornerRadius="@dimen/padding1">
 
     <android.support.constraint.ConstraintLayout
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/recipe_item_height"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/recipe_card_view_height"
         android:layout_gravity="center"
         android:layout_margin="@dimen/padding1"
         android:padding="@dimen/padding1">
@@ -36,16 +38,16 @@
         <ImageView
             android:id="@+id/recipe_image"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/recipe_item_image_height"
-            android:layout_margin="@dimen/padding2"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/padding4"
             android:contentDescription="@string/description_recipe_image"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/ic_launcher_background" />
+            tools:src="@drawable/recipe_book_main_list" />
 
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/name"
             style="@style/title_style"
             android:layout_height="0dp"
             android:layout_margin="@dimen/padding2"

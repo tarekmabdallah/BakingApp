@@ -21,7 +21,9 @@ import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.COMMA;
+import com.gmail.tarekmabdallah91.bakingapp.utils.JsonUtils;
+
+import java.util.List;
 
 @Entity(tableName = "recipes")
 public class RecipeEntry implements Parcelable {
@@ -41,37 +43,49 @@ public class RecipeEntry implements Parcelable {
     // if wanted to change it use @ColumnInfo(name = "wanted named") before the variable declaration
     @PrimaryKey(autoGenerate = true)
     private int rowId;
-    private String title;
+    //        example
+//        "id": 1,
+//        "name": "Nutella Pie",
+//        "ingredients":[] ,
+//        "steps":[],
+//        "servings": 8,
+//        "images": ""
+    private int recipeId;
+    private String name;
     private String ingredients;
-    private String instructions;
+    private String steps;
     private String images;
-    private String videos;
+    private int serving;
+
 
     @Ignore
-    public RecipeEntry(String title, String ingredients, String instructions, String images, String videos) {
-        this.title = title;
+    public RecipeEntry(int recipeId, String name, String ingredients, String steps, String images, int serving) {
+        this.recipeId = recipeId;
+        this.name = name;
         this.ingredients = ingredients;
-        this.instructions = instructions;
+        this.steps = steps;
         this.images = images;
-        this.videos = videos;
+        this.serving = serving;
     }
 
-    public RecipeEntry(int rowId, String title, String ingredients, String instructions, String images, String videos) {
+    public RecipeEntry(int rowId, int recipeId, String name, String ingredients, String steps, String images, int serving) {
         this.rowId = rowId;
-        this.title = title;
+        this.name = name;
         this.ingredients = ingredients;
-        this.instructions = instructions;
+        this.steps = steps;
         this.images = images;
-        this.videos = videos;
+        this.recipeId = recipeId;
+        this.serving = serving;
     }
 
     private RecipeEntry(Parcel in) {
         rowId = in.readInt();
-        title = in.readString();
+        name = in.readString();
         ingredients = in.readString();
-        instructions = in.readString();
+        steps = in.readString();
         images = in.readString();
-        videos = in.readString();
+        recipeId = in.readInt();
+        serving = in.readInt();
     }
 
     public int getRowId() {
@@ -94,32 +108,56 @@ public class RecipeEntry implements Parcelable {
         return ingredients;
     }
 
+    public List<String> getIngredientsList() {
+        return JsonUtils.getIngredientsFromJson(ingredients);
+    }
+
+    public List<StepModel> getStepsList() {
+        return JsonUtils.getStepsFromJson(steps);
+    }
+
+    public List<String> getShortDescriptionsList() {
+        return JsonUtils.getShortDescriptionListFromJson(steps);
+    }
+
+    public List<String> getImagesList() {
+        return JsonUtils.getImagesListFromJson(images);
+    }
+
     public void setIngredients(String ingredients) {
         this.ingredients = ingredients;
     }
 
-    public String getInstructions() {
-        return instructions;
+    public String getSteps() {
+        return steps;
     }
 
-    public void setInstructions(String instructions) {
-        this.instructions = instructions;
+    public void setSteps(String steps) {
+        this.steps = steps;
     }
 
-    public String getVideos() {
-        return videos;
+    public String getName() {
+        return name;
     }
 
-    public void setVideos(String videos) {
-        this.videos = videos;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getTitle() {
-        return title;
+    public int getRecipeId() {
+        return recipeId;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setRecipeId(int recipeId) {
+        this.recipeId = recipeId;
+    }
+
+    public int getServing() {
+        return serving;
+    }
+
+    public void setServing(int serving) {
+        this.serving = serving;
     }
 
     @Override
@@ -130,36 +168,11 @@ public class RecipeEntry implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(rowId);
-        dest.writeString(title);
+        dest.writeString(name);
         dest.writeString(ingredients);
-        dest.writeString(instructions);
+        dest.writeString(steps);
         dest.writeString(images);
-        dest.writeString(videos);
+        dest.writeInt(recipeId);
+        dest.writeInt(serving);
     }
-
-    public String[] getImagesUrls() {
-        String imagesUrls[] = null;
-        if (null != images) {
-            if (images.contains(COMMA)) { // more than one
-                imagesUrls = images.split(COMMA);
-            } else { // one image
-                imagesUrls = new String[]{images};
-            }
-        }
-        return imagesUrls;
-    }
-
-    public String[] getVideosUrls() {
-        String videosUrls[] = null;
-        if (null != videos) {
-            if (videos.contains(COMMA)) { // more than one
-                videosUrls = videos.split(COMMA);
-            } else { // one video link
-                videosUrls = new String[]{videos};
-            }
-        }
-        return videosUrls;
-    }
-
-
 }

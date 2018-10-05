@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 
+import com.gmail.tarekmabdallah91.bakingapp.R;
 import com.gmail.tarekmabdallah91.bakingapp.activities.DetailsActivity;
 import com.gmail.tarekmabdallah91.bakingapp.models.RecipeEntry;
 
@@ -35,9 +36,9 @@ public class NotificationUtils {
     public static void startNotification (Context context, RecipeEntry recipeEntry){
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context , NOTIFICATION_CHANNEL_STRING_ID);
         notificationBuilder.setContentIntent(pendingIntent(context , getIntent(context , recipeEntry)))
-                .setSmallIcon(android.R.drawable.btn_star_big_on)
-                .setContentTitle(recipeEntry.getTitle())
-                .setContentText(recipeEntry.getInstructions())
+                .setSmallIcon(R.drawable.ic_icon_app2)
+                .setContentTitle(context.getString(R.string.app_name))
+                .setContentText(recipeEntry.getName())
                 .setAutoCancel(true);
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (notificationManager != null) {

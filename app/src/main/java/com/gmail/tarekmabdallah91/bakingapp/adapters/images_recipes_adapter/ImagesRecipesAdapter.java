@@ -25,14 +25,17 @@ import android.view.ViewGroup;
 import com.gmail.tarekmabdallah91.bakingapp.R;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
+import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.ONE;
+import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.ZERO;
+
 public class ImagesRecipesAdapter extends RecyclerView.Adapter<ImagesRecipesViewHolder> {
 
+    private List<String> imagesUrls;
 
-    private String[] imagesUrls;
-    private final OnImagesRecipesClickListener onRecipeClickListener;
-
-    public ImagesRecipesAdapter(OnImagesRecipesClickListener onRecipeClickListener){
-        this.onRecipeClickListener = onRecipeClickListener;
+    public ImagesRecipesAdapter(List<String> imagesUrls) {
+        this.imagesUrls = imagesUrls;
     }
 
     @NonNull
@@ -46,22 +49,25 @@ public class ImagesRecipesAdapter extends RecyclerView.Adapter<ImagesRecipesView
     @Override
     public void onBindViewHolder(@NonNull ImagesRecipesViewHolder holder, int position) {
 
-        String url = imagesUrls[position];
-        Picasso.get().load(url)
-                .error(android.R.drawable.stat_notify_error)
-                .placeholder(android.R.drawable.stat_notify_sync)
-                .into(holder.imagesRecipesIV);
+        if (null != imagesUrls && !imagesUrls.isEmpty()) {
+            String url = imagesUrls.get(position);
+            Picasso.get().load(url)
+                    .error(android.R.drawable.stat_notify_error)
+                    .placeholder(android.R.drawable.stat_notify_sync)
+                    .into(holder.imagesRecipesIV);
+        } else {
+            Picasso.get().load(R.drawable.recipe_book_main_list)
+                    .error(android.R.drawable.stat_notify_error)
+                    .placeholder(android.R.drawable.stat_notify_sync)
+                    .into(holder.imagesRecipesIV);
+        }
     }
 
     @Override
     public int getItemCount() {
-        if (imagesUrls == null) return 0;
-
-        return imagesUrls.length;
+        if (imagesUrls == null) return ZERO;
+        if (imagesUrls.isEmpty()) return ONE; // to show icon app as default image
+        return imagesUrls.size();
     }
 
-    public void swapList (String [] imagesUrls){
-        this.imagesUrls = imagesUrls;
-        notifyDataSetChanged();
-    }
 }

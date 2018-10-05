@@ -44,7 +44,7 @@ public class RecipesWidgetProvider extends AppWidgetProvider {
         String widgetText;
         Intent intent;
         if (lastRecipe != null) {
-            widgetText = lastRecipe.getRowId() + lastRecipe.getTitle();
+            widgetText = lastRecipe.getRowId() + lastRecipe.getName();
             intent = new Intent(context , DetailsActivity.class);
             intent.putExtra(RECIPE_KEYWORD, lastRecipe);
         }else {

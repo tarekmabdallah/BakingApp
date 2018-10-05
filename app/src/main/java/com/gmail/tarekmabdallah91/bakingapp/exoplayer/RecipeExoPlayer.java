@@ -20,11 +20,13 @@ import android.content.Context;
 import android.net.Uri;
 import android.view.View;
 
+import com.gmail.tarekmabdallah91.bakingapp.R;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.dash.DashChunkSource;
 import com.google.android.exoplayer2.source.dash.DashMediaSource;
@@ -35,7 +37,9 @@ import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 
 public class RecipeExoPlayer {
 
@@ -52,7 +56,7 @@ public class RecipeExoPlayer {
         this.context = context;
     }
 
-    public ExoPlayer initializePlayerForDash(PlayerView playerView , String[] videosUrls) {
+    public ExoPlayer initializePlayerForDash(PlayerView playerView, String videosUrl) {
         this.playerView = playerView;
         if (player == null) {
             // a factory to create an AdaptiveVideoTrackSelection
@@ -68,10 +72,29 @@ public class RecipeExoPlayer {
             player.setPlayWhenReady(playWhenReady);
             player.seekTo(currentWindow, playbackPosition);
         }
-        // TODO - to play a list of videos
-        // get just the 1st element for now
-        MediaSource mediaSource = buildMediaSourceDash(Uri.parse(videosUrls[0]));
+
+        MediaSource mediaSource = buildMediaSourceDash(Uri.parse(videosUrl));
         player.prepare(mediaSource, true, false);
+        return player;
+    }
+
+    public ExoPlayer initializePlayerForMp4(PlayerView playerView, String mp4VideoUri) {
+        this.playerView = playerView;
+        if (player == null) {
+            // a factory to create an AdaptiveVideoTrackSelection
+            TrackSelection.Factory adaptiveTrackSelectionFactory =
+                    new AdaptiveTrackSelection.Factory(BANDWIDTH_METER);
+
+            player = ExoPlayerFactory.newSimpleInstance(
+                    new DefaultRenderersFactory(context),
+                    new DefaultTrackSelector(adaptiveTrackSelectionFactory),
+                    new DefaultLoadControl());
+
+            playerView.setPlayer(player);
+            player.setPlayWhenReady(playWhenReady);
+            player.seekTo(currentWindow, playbackPosition);
+        }
+        player.prepare(buildMediaSourceMp4(Uri.parse(mp4VideoUri)), true, false);
         return player;
     }
 
@@ -97,13 +120,22 @@ public class RecipeExoPlayer {
         }
     }
     private MediaSource buildMediaSourceDash(Uri uri) {
+        final String USER_AGENT = "ua";
         DataSource.Factory manifestDataSourceFactory =
-                new DefaultHttpDataSourceFactory("ua");
+                new DefaultHttpDataSourceFactory(USER_AGENT);
         DashChunkSource.Factory dashChunkSourceFactory =
                 new DefaultDashChunkSource.Factory(
-                        new DefaultHttpDataSourceFactory("ua", BANDWIDTH_METER));
+                        new DefaultHttpDataSourceFactory(USER_AGENT, BANDWIDTH_METER));
         return new DashMediaSource.Factory(dashChunkSourceFactory,
                 manifestDataSourceFactory).createMediaSource(uri);
+    }
+
+    private MediaSource buildMediaSourceMp4(Uri uri) {
+        // Produces DataSource instances through which media data is loaded.
+        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(context,
+                Util.getUserAgent(context, context.getString(R.string.app_name)));
+        // This is the MediaSource representing the media to be played.
+        return new ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(uri);
     }
 
     

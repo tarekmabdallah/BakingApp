@@ -21,13 +21,8 @@ import android.arch.persistence.room.PrimaryKey;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import com.gmail.tarekmabdallah91.bakingapp.utils.BitmapUtils;
-
-import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.IMAGE_SIZE;
 
 @Entity(tableName = "userProfile")
 public class UserEntry implements Parcelable {
@@ -185,8 +180,6 @@ public class UserEntry implements Parcelable {
         Bitmap userBitmap = null;
         if (null != imageFilePath)
             userBitmap = BitmapFactory.decodeFile(imageFilePath); // captured photo
-        if (null != imageUrl)
-            userBitmap = BitmapUtils.uriToBitmap(context, Uri.parse(imageUrl), IMAGE_SIZE); // picked image
         return userBitmap;
     }
 

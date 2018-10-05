@@ -15,9 +15,6 @@ limitations under the License.
 -->
 <resources>
     <string name="app_name">Baking App</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_desc">Navigation header</string>
 
     <string name="settings"> Settings</string>
 
@@ -25,11 +22,11 @@ limitations under the License.
     <string name="recipe_title"> Recipe Title </string>
 
     <string name="ingredients"> 1-ingredients1\n2-ingredients2\n3-ingredients3</string>
-    <string name="instructions"> 1-instructions1\n2-instructions\n3-instructions3</string>
+    <string name="steps_label">Steps:</string>
 
-    <string name="details_label">Details</string>
-    <string name="ingredients_label">Ingredients</string>
-    <string name="instructions_label">Instructions</string>
+    <string name="details_label">Details:</string>
+    <string name="ingredients_label">Ingredients:</string>
+    <string name="instructions_label">Instructions:</string>
 
     <string name="title_list_background_colors">select your favoured theme</string>
     <string name="key_background_color_list" translatable="false">backgroundColor</string>
@@ -42,8 +39,7 @@ limitations under the License.
     <string name="key_color_purple">Purple</string>
     <string name="key_color_black">Dracula</string>
 
-    <string name="no_videos_msg">Sorry There is no videos for this recipe\n
-    But here is a fun video for you </string>
+    <string name="no_videos_msg">Sorry There is no videos for this step</string>
     <string name="no_images_msg">Sorry There is not images for this recipe</string>
     <string name="creating_new_db_instance_msg">Creating new database instance</string>
     <string name="getting_db_instance_msg">Getting the database instance</string>
@@ -56,10 +52,8 @@ limitations under the License.
     <string name="media_url_dash"><![CDATA[http://www.youtube.com/api/manifest/dash/id/bf5bb2419360daf1/source/youtube?as=fmp4_audio_clear,fmp4_sd_hd_clear&sparams=ip,ipbits,expire,source,id,as&ip=0.0.0.0&ipbits=0&expire=19000000000&signature=51AF5F39AB0CEC3E5497CD9C900EBFEAECCCB5C7.8506521BFC350652163895D4C26DEE124209AA9E&key=ik0]]></string>
 
     <string name="bundle_is_msg">bundle is : %s</string>
-    <string name="notification_type_and_id_msg">message type : %s , , message Id is : %s</string>
+    <string name="notification_type_and_id_msg">message type : %s , message Id is : %s</string>
     <string name="title_activity_main">Main</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="profile">Edit Profile</string>
     <string name="description_profile_picture">description_profile_picture</string>
     <string name="male_radio_Btn">Male</string>
@@ -74,11 +68,7 @@ limitations under the License.
     <string name="first_name_label">First Name</string>
     <string name="last_name_label">Last Name</string>
     <string name="not_valid_data_msg">Error : Please enter valid data !</string>
-    <string name="videos_msg">videos contains : %d</string>
-    <string name="video_msg">videos contain one video</string>
     <string name="images_empty_msg">images are : empty</string>
-    <string name="images_contain_msg">images contain : , %d</string>
-    <string name="image_msg">images contains one image</string>
     <string name="text_is_msg">text is : %s</string>
     <string name="need_location_permission_msg">need location permission</string>
     <string name="google_play_service_not_available_msg">GooglePlayServices Not Available [%s]</string>
@@ -90,8 +80,14 @@ limitations under the License.
     <string name="select_your_location_label">Select your location</string>
     <string name="select_gender_label">Gender :</string>
     <string name="photo_required_msg">Sorry ! you must select/take a photo !</string>
-    <string name="no_data_msg">Sorry! There is not any recipe now/n come back later!</string>
+    <string name="no_data_msg">Sorry! There is not any recipe now\ncome back later!</string>
     <string name="empty_screen_msg">Please select a recipe to display it\'s details</string>
     <string name="description_recipe_image">description_recipe_image</string>
     <string name="required_msg">Required !</string>
+    <string name="splash_screen_image">Splash Screen Image</string>
+    <string name="login_btn_text">Login</string>
+    <string name="welcome_in_baking_app">Welcome in Baking App</string>
+    <string name="next">Next</string>
+    <string name="back">Back</string>
+    <string name="ingredients_to_string">%s\nQuantity: %d %s\n\n</string>
 </resources>

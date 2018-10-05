@@ -21,7 +21,7 @@
     android:initialLayout="@layout/recipe_widget"
     android:minHeight="@dimen/widget_height"
     android:minWidth="@dimen/widget_width"
-    android:previewImage="@drawable/example_appwidget_preview"
+    android:previewImage="@drawable/ic_icon_app"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="86400000"
     android:widgetCategory="home_screen"

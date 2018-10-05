@@ -22,8 +22,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/name"
         style="@style/widget_title_style"
-        tools:text="hello"/>
+        tools:text="@string/app_name" />
 
 </LinearLayout>

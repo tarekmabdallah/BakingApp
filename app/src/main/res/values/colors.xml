@@ -34,5 +34,10 @@ limitations under the License.
     <color name="widget_background">#ff00ddff</color>
     <color name="widget_text_color">@android:color/white</color>
 
+    <!-- splash screen -->
+    <color name="splash_screen_background">@color/md_orange_300</color>
+    <color name="login_btn_background">@color/md_brown_400</color>
+    <color name="splash_text_color">@color/md_brown_400</color>
+
 
 </resources>

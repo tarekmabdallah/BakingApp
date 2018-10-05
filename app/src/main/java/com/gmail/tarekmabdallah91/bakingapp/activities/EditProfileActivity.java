@@ -19,7 +19,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -30,6 +29,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -38,7 +38,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.gmail.tarekmabdallah91.bakingapp.R;
 import com.gmail.tarekmabdallah91.bakingapp.data.room.RoomPresenter;
 import com.gmail.tarekmabdallah91.bakingapp.models.UserEntry;
@@ -57,6 +56,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
@@ -65,14 +65,12 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import timber.log.Timber;
 
 import static android.view.View.VISIBLE;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.EMPTY_TEXT;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.FORMAT_GEO;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.GENDER_MALE;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.IMAGE_INTENT_TYPE;
-import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.IMAGE_SIZE;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.LATITUDE_KEYWORD;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.LONGITUDE_KEYWORD;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.PROVIDER_AUTHORITY;
@@ -149,7 +147,7 @@ public class EditProfileActivity extends AppCompatActivity implements OnMapReady
 
         setMap();
         if (null != user) { // may be null if there is not any entry in userDb
-            Glide.with(this).load(user.getUserBitmap(this)).into(profilePictureIv); // set image view
+            Picasso.get().load(user.getImageFilePath()).error(android.R.drawable.stat_notify_error).into(profilePictureIv); // set image view
             firstNameET.setText(user.getFirstName()); // set first name
             lastNameET.setText(user.getLastName()); // set last name
             int gender = user.getGender(); // get saved gender then set it in the radio group
@@ -186,7 +184,6 @@ public class EditProfileActivity extends AppCompatActivity implements OnMapReady
             if (photoFile != null) {
                 String imageFilePath = photoFile.getAbsolutePath();
                 userData.putString(USER_PICTURE_PATH, imageFilePath);
-                userData.putString(USER_PICTURE_URI, null); // to be sure that user has only one image
                 Uri photoURI = FileProvider.getUriForFile(this, PROVIDER_AUTHORITY, photoFile);
                 openTheCamera.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(openTheCamera, REQUEST_CAPTURE_IMAGE);
@@ -206,26 +203,23 @@ public class EditProfileActivity extends AppCompatActivity implements OnMapReady
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // to get uri for profile picture to save it in Room (UserEntry)
-
+        String imageFilePath = null;
         if (REQUEST_CAPTURE_IMAGE == requestCode && RESULT_OK == resultCode) {
-            String imageFilePath = userData.getString(USER_PICTURE_PATH);
-            Glide.with(this).load(imageFilePath).into(profilePictureIv);
+            imageFilePath = userData.getString(USER_PICTURE_PATH);
         } else if (REQUEST_PICK_IMAGE_FROM_GALLERY == requestCode && RESULT_OK == resultCode) {
             if (data != null) {
-                Uri uri = data.getData();
-                Bitmap imageBitmap = BitmapUtils.uriToBitmap(this, uri, IMAGE_SIZE);
-                String imageFileUri = String.valueOf(uri);
-                userData.putString(USER_PICTURE_URI, imageFileUri);
-                userData.putString(USER_PICTURE_PATH, null); // to be sure that user has one image
-                Glide.with(this).load(imageBitmap).into(profilePictureIv);
+                imageFilePath = String.valueOf(data.getData());
+                userData.putString(USER_PICTURE_PATH, imageFilePath);
             }
         }
+        Picasso.get().load(imageFilePath).error(android.R.drawable.stat_notify_error).into(profilePictureIv);
+
         if (requestCode == REQUEST_PLACE_PIKER && resultCode == RESULT_OK) {
             Place place;
             if (data != null) {
                 place = PlacePicker.getPlace(this, data);
                 if (place == null) {
-                    Timber.i(getString(R.string.no_place_selected_msg));
+                    Log.i(TAG, getString(R.string.no_place_selected_msg));
                     Toast.makeText(this, getString(R.string.no_place_selected_msg), Toast.LENGTH_LONG).show();
                 } else {
                     // Extract the place information from the API
@@ -384,11 +378,11 @@ public class EditProfileActivity extends AppCompatActivity implements OnMapReady
             Intent picker = builder.build(this);
             startActivityForResult(picker, REQUEST_PLACE_PIKER);
         } catch (GooglePlayServicesRepairableException e) {
-            Timber.e(getString(R.string.google_play_service_not_available_msg), e.getMessage());
+            Log.e(TAG, String.format(getString(R.string.google_play_service_not_available_msg), e.getMessage()));
         } catch (GooglePlayServicesNotAvailableException e) {
-            Timber.e(getString(R.string.google_play_service_not_available_msg), e.getMessage());
+            Log.e(TAG, String.format(getString(R.string.google_play_service_not_available_msg), e.getMessage()));
         } catch (Exception e) {
-            Timber.e(getString(R.string.place_picker_exception), e.getMessage());
+            Log.e(TAG, String.format(getString(R.string.place_picker_exception), e.getMessage()));
         }
 
     }

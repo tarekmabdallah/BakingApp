@@ -75,9 +75,9 @@ public class DrawerUtil {
                 .withIdentifier(TWO).withName(R.string.profile).withIcon(R.drawable.ic_vol_type_speaker_dark);*/
 
         SecondaryDrawerItem main = new SecondaryDrawerItem().withIdentifier(TWO)
-                .withName(R.string.title_activity_main).withIcon(R.drawable.ic_menu_send);
+                .withName(R.string.title_activity_main).withIcon(R.drawable.ic_recipe_book_main_list);
         SecondaryDrawerItem editProfile = new SecondaryDrawerItem().withIdentifier(THREE)
-                .withName(R.string.profile).withIcon(R.drawable.ic_menu_camera);
+                .withName(R.string.profile).withIcon(R.drawable.ic_user2);
         SecondaryDrawerItem settings = new SecondaryDrawerItem().withIdentifier(FOUR)
                 .withName(R.string.settings).withIcon(R.drawable.ic_menu_manage);
 

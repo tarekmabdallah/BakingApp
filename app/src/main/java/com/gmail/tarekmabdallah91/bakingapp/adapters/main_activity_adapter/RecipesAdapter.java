@@ -49,19 +49,28 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull RecipesViewHolder holder, int position) {
         RecipeEntry recipeEntry = recipeEntries.get(position);
-        holder.title.setText(recipeEntry.getTitle());
+        holder.name.setText(recipeEntry.getName());
         holder.setOnRecipeClickListener(onRecipeClickListener);
         holder.setRecipeEntries(recipeEntries);
         holder.itemView.setTag(recipeEntry.getRowId());
-        Picasso.get()
-                .load(recipeEntry.getImagesUrls()[ZERO])
-                .error(android.R.drawable.stat_notify_error)
-                .into(holder.recipeImage);
+        String imageUrl = recipeEntry.getImages();
+        if (null != imageUrl && !imageUrl.isEmpty()) {
+            Picasso.get()
+                    .load(imageUrl)
+                    .error(android.R.drawable.stat_notify_error)
+                    .into(holder.recipeImage);
+        } else {
+            Picasso.get()
+                    .load(R.drawable.icon_app)
+                    .error(android.R.drawable.stat_notify_error)
+                    .into(holder.recipeImage);
+        }
+
     }
 
     @Override
     public int getItemCount() {
-        if (recipeEntries == null) return 0;
+        if (recipeEntries == null) return ZERO;
 
         return recipeEntries.size();
     }
