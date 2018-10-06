@@ -17,16 +17,8 @@ public class ParentInExpendableRecyclerView implements Serializable {
         return childes;
     }
 
-    public void setChildes(List<String> childes) {
-        this.childes = childes;
-    }
-
     public String getParentName() {
         return parentName;
-    }
-
-    public void setParentName(String parentName) {
-        this.parentName = parentName;
     }
 
 }

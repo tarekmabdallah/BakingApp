@@ -28,7 +28,7 @@ import butterknife.ButterKnife;
 
 public class ImagesRecipesViewHolder extends RecyclerView.ViewHolder {
 
-    @BindView(R.id.image_recipes)
+    @BindView(R.id.image_recipes_item)
     ImageView imagesRecipesIV;
 
     private List<String> images;
@@ -36,14 +36,6 @@ public class ImagesRecipesViewHolder extends RecyclerView.ViewHolder {
     ImagesRecipesViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
-    }
-
-    public List<String> getImages() {
-        return images;
-    }
-
-    public void setImages(List<String> images) {
-        this.images = images;
     }
 
 }

@@ -15,6 +15,7 @@
  */
 package com.gmail.tarekmabdallah91.bakingapp.widget;
 
+import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -36,6 +37,7 @@ import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.ZERO;
  */
 public class RecipesWidgetProvider extends AppWidgetProvider {
 
+    @SuppressLint("DefaultLocale")
     private static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                         int appWidgetId) {
 
@@ -43,8 +45,10 @@ public class RecipesWidgetProvider extends AppWidgetProvider {
         RecipeEntry lastRecipe = RoomPresenter.getLastRecipeEntry(context);
         String widgetText;
         Intent intent;
+        final String formatTextWidget = "%d - %s\n(%s)";
         if (lastRecipe != null) {
-            widgetText = lastRecipe.getRowId() + lastRecipe.getName();
+            widgetText = String.format(
+                    formatTextWidget, lastRecipe.getRowId(), lastRecipe.getName(), context.getString(R.string.app_name));
             intent = new Intent(context , DetailsActivity.class);
             intent.putExtra(RECIPE_KEYWORD, lastRecipe);
         }else {
@@ -55,15 +59,16 @@ public class RecipesWidgetProvider extends AppWidgetProvider {
 
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget);
-        views.setTextViewText(R.id.title, widgetText);
+        views.setTextViewText(R.id.name, widgetText);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
 
         // In widget we are not allowing to use intents as usually. We have to use PendingIntent instead of 'startActivity'
         PendingIntent pendingIntent = PendingIntent.getActivity(context, ZERO, intent, ZERO);
+
         // Here the basic operations the remote view can do.
-        views.setOnClickPendingIntent(R.id.title , pendingIntent);
+        views.setOnClickPendingIntent(R.id.name, pendingIntent);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);

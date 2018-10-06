@@ -53,13 +53,10 @@
         <item name="android:layout_gravity">center</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/widget_text_color</item>
+        <item name="android:drawableStart">@drawable/ic_recipe_book_main_list_48dp</item>
         <item name="android:background">@color/widget_background</item>
     </style>
 
-
-    <style name="labels_style" parent="text_views_style">
-        <item name="android:textSize">@dimen/label_text_size</item>
-    </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>

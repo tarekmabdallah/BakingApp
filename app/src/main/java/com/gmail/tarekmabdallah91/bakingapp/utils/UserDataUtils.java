@@ -39,8 +39,8 @@ public class UserDataUtils {
      * if not null or bad save it
      * else show toast msg for him
      *
-     * @param editText
-     * @return
+     * @param editText -
+     * @return -
      */
     public static String getTextsFromEditText(Context context, EditText editText) {
         return checkTexts(context, editText.getText().toString().trim());
@@ -75,7 +75,7 @@ public class UserDataUtils {
     /**
      * to set user Id temporarily tell get the right value from Firebase
      *
-     * @return
+     * @return -
      */
     public static String setUserId() {
         int randomValue = getRandomValue();

@@ -23,123 +23,123 @@ package com.gmail.tarekmabdallah91.bakingapp.utils;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.gmail.tarekmabdallah91.bakingapp.R;
 import com.gmail.tarekmabdallah91.bakingapp.activities.EditProfileActivity;
 import com.gmail.tarekmabdallah91.bakingapp.activities.MainActivity;
-import com.gmail.tarekmabdallah91.bakingapp.activities.SettingsActivity;
+import com.gmail.tarekmabdallah91.bakingapp.data.room.RoomPresenter;
 import com.gmail.tarekmabdallah91.bakingapp.models.UserEntry;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
-import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.EMPTY_TEXT;
-import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.FOUR;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.INVALID;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.THREE;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.TWO;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.ZERO;
 
-
 public class DrawerUtil {
-    public static void getDrawer(final Activity activity, Toolbar toolbar) {
 
-        UserEntry user = null;//= RoomPresenter.getLastUserEntry(activity);
-        String title;
-        String subTitle;
-        Bitmap image = null;
+
+    private final Activity activity;
+    private final Toolbar toolbar;
+    private final int colorRes;
+    private final String title;
+    private final String subTitle;
+    private AccountHeader headerResult;
+    private Bitmap image;
+
+
+    public DrawerUtil(final Activity activity, Toolbar toolbar) {
+        this.activity = activity;
+        this.toolbar = toolbar;
+
+        colorRes = R.color.nav_background_default_theme;
+        UserEntry user = RoomPresenter.getLastUserEntry(activity);
         if (null != user) {
             title = user.getFirstName();
             subTitle = user.getLastName();
-            image = user.getUserBitmap(activity);
+            image = BitmapUtils.rotateBitmap(BitmapUtils.uriToBitmap
+                    (activity, Uri.parse(user.getImageFilePath())));
         } else {
             title = activity.getString(R.string.app_name);
             subTitle = EMPTY_TEXT;
         }
 
-        //if you want to update the items at a later time it is recommended to keep it in a variable
+        setHeaderResult();
+        buildDrawer();
+    }
+
+    public Drawer buildDrawer() {
         PrimaryDrawerItem drawerEmptyItem = new PrimaryDrawerItem().withIdentifier(ZERO).withName(EMPTY_TEXT);
         drawerEmptyItem.withEnabled(false);
 
-       /* PrimaryDrawerItem drawerItemManagePlayers = new PrimaryDrawerItem().withIdentifier(ONE)
-                .withName(R.string.app_name).withIcon(R.drawable.ic_launcher_foreground);
-        PrimaryDrawerItem drawerItemManagePlayersTournaments = new PrimaryDrawerItem()
-                .withIdentifier(TWO).withName(R.string.profile).withIcon(R.drawable.ic_vol_type_speaker_dark);*/
-
         SecondaryDrawerItem main = new SecondaryDrawerItem().withIdentifier(TWO)
-                .withName(R.string.title_activity_main).withIcon(R.drawable.ic_recipe_book_main_list);
+                .withName(R.string.title_activity_main).withIcon(R.drawable.ic_recipe_book_main_list_512dp);
         SecondaryDrawerItem editProfile = new SecondaryDrawerItem().withIdentifier(THREE)
                 .withName(R.string.profile).withIcon(R.drawable.ic_user2);
-        SecondaryDrawerItem settings = new SecondaryDrawerItem().withIdentifier(FOUR)
-                .withName(R.string.settings).withIcon(R.drawable.ic_menu_manage);
 
+        // set divider
+        //DividerDrawerItem dividerDrawerItem = new DividerDrawerItem();
 
-        // Create the AccountHeader
-        AccountHeader headerResult = getAccountHeader(activity, title, subTitle, image);
+        // set onDrawerClickListener
+        Drawer.OnDrawerItemClickListener onDrawerItemClickListener = new Drawer.OnDrawerItemClickListener() {
+            @Override
+            public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                Intent intent = null;
+                if (drawerItem.getIdentifier() == THREE && !(activity instanceof EditProfileActivity)) {
+                    intent = new Intent(activity, EditProfileActivity.class);
+                } else if (drawerItem.getIdentifier() == TWO && !(activity instanceof MainActivity)) {
+                    intent = new Intent(activity, MainActivity.class);
+                }
+                if (null != intent) activity.startActivity(intent);
+                return true;
+            }
+        };
 
-
-        //create the drawer and remember the `Drawer` result object
-        Drawer result = new DrawerBuilder()
+        return new DrawerBuilder()
                 .withActivity(activity)
                 .withToolbar(toolbar)
                 .withActionBarDrawerToggle(true)
                 .withActionBarDrawerToggleAnimated(true)
+                .withInnerShadow(true)
+                .withSliderBackgroundDrawableRes(colorRes)
                 .withCloseOnClick(true)
                 .withSelectedItem(INVALID)
-                .addDrawerItems(
-                        new DividerDrawerItem(),
-                        main,
-                        editProfile,
-                        settings)
-                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                    @Override
-                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        Intent intent = null;
-                        if (drawerItem.getIdentifier() == THREE && !(activity instanceof EditProfileActivity)) {
-                            intent = new Intent(activity, EditProfileActivity.class);
-                        } else if (drawerItem.getIdentifier() == FOUR && !(activity instanceof SettingsActivity)) {
-                            intent = new Intent(activity, SettingsActivity.class);
-                        } else if (drawerItem.getIdentifier() == TWO && !(activity instanceof MainActivity)) {
-                            intent = new Intent(activity, MainActivity.class);
-                        }
-                        if (null != intent) view.getContext().startActivity(intent);
-                        return true;
-                    }
-                })
+                .addDrawerItems(main, editProfile)
+                .withOnDrawerItemClickListener(onDrawerItemClickListener)
                 .withAccountHeader(headerResult) //Now create your drawer and pass the AccountHeader.Result
                 .build();
     }
 
-    // TODO to update user data once the user edit the profile (not after re launch the app)
-    private static AccountHeader getAccountHeader(Activity activity, String title, String subTitle, Bitmap image) {
+    private void setHeaderResult() {
+        headerResult = getAccountHeader(activity, title, subTitle, image);
+    }
+
+    private AccountHeader getAccountHeader(Activity activity, String title, String subTitle, Bitmap image) {
+        AccountHeaderBuilder accountHeaderBuilder = new AccountHeaderBuilder();
+        ProfileDrawerItem profileDrawerItem = new ProfileDrawerItem();
+        profileDrawerItem.withName(title).withEmail(subTitle);
         if (null != image) {
-            return new AccountHeaderBuilder()
-                    .withActivity(activity)
-                    .withHeaderBackground(R.drawable.ic_launcher_background)
-                    .addProfiles(new ProfileDrawerItem()
-                            .withName(title)
-                            .withEmail(subTitle)
-                            .withIcon(image))
-                    .build();
-        } else {
-            return new AccountHeaderBuilder()
-                    .withActivity(activity)
-                    .withHeaderBackground(R.drawable.ic_launcher_background)
-                    .addProfiles(new ProfileDrawerItem()
-                            .withName(title)
-                            .withEmail(subTitle))
-                    .withCurrentProfileHiddenInList(true)
-                    .withOnlyMainProfileImageVisible(true)
-                    .withResetDrawerOnProfileListClick(true)
-                    .build();
+            profileDrawerItem.withIcon(image);
         }
+        accountHeaderBuilder
+                // .withHeaderBackground(R.color.nav_background)
+                .withActivity(activity)
+                .addProfiles(profileDrawerItem)
+                .withCurrentProfileHiddenInList(true)
+                .withOnlyMainProfileImageVisible(true)
+                .withResetDrawerOnProfileListClick(true);
+
+        return accountHeaderBuilder.build();
     }
 }

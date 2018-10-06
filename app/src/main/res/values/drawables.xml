@@ -13,6 +13,4 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<resources>
-    <item name="ic_menu_send" type="drawable">@android:drawable/ic_menu_send</item>
-</resources>
+<resources></resources>

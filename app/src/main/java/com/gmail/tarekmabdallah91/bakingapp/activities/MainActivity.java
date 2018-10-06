@@ -15,7 +15,6 @@
  */
 package com.gmail.tarekmabdallah91.bakingapp.activities;
 
-
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
@@ -33,7 +32,6 @@ import android.widget.Toast;
 
 import com.gmail.tarekmabdallah91.bakingapp.R;
 import com.gmail.tarekmabdallah91.bakingapp.adapters.main_activity_adapter.OnRecipeClickListener;
-import com.gmail.tarekmabdallah91.bakingapp.adapters.main_activity_adapter.OnRecipeClickedOnFragment;
 import com.gmail.tarekmabdallah91.bakingapp.adapters.main_activity_adapter.RecipesAdapter;
 import com.gmail.tarekmabdallah91.bakingapp.data.room.RoomPresenter;
 import com.gmail.tarekmabdallah91.bakingapp.data.room.recipe.RecipeViewModel;
@@ -41,7 +39,7 @@ import com.gmail.tarekmabdallah91.bakingapp.models.RecipeEntry;
 import com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants;
 import com.gmail.tarekmabdallah91.bakingapp.utils.DrawerUtil;
 import com.gmail.tarekmabdallah91.bakingapp.utils.ScreenSizeUtils;
-import com.gmail.tarekmabdallah91.bakingapp.utils.ThemesUtils;
+import com.mikepenz.materialdrawer.Drawer;
 
 import java.util.List;
 
@@ -51,10 +49,6 @@ import butterknife.ButterKnife;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.ZERO;
-
-
-// TODO 5 to add essprsso
-// TODO 6 apply mvp model
 
 public class MainActivity extends AppCompatActivity implements OnRecipeClickListener {
 
@@ -69,11 +63,10 @@ public class MainActivity extends AppCompatActivity implements OnRecipeClickList
 
     private RecipesAdapter adapter;
     private RoomPresenter roomPresenter;
-    private OnRecipeClickedOnFragment callbacks;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(ThemesUtils.getThemeByKey(this)); // must be before setContentView() to set theme
         setContentView(R.layout.base_layout);
 
         setUI();
@@ -95,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements OnRecipeClickList
         ItemTouchHelper itemTouchHelper =
                 new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ZERO, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
                     @Override
-                    public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                    public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
                         return false;
                     }
 
@@ -130,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements OnRecipeClickList
     private void initiateValues() {
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        DrawerUtil.getDrawer(this, toolbar);
+
         adapter = new RecipesAdapter(this);
         roomPresenter = RoomPresenter.getInstance(this);
     }
@@ -138,7 +131,11 @@ public class MainActivity extends AppCompatActivity implements OnRecipeClickList
     @Override
     protected void onResume() {
         super.onResume();
-        if (ThemesUtils.isThemeChanged()) recreate(); // to reset the theme
+        DrawerUtil drawerUtil = new DrawerUtil(this, toolbar);
+        Drawer drawer = drawerUtil.buildDrawer();
+        if (drawer.isDrawerOpen())
+            drawer.closeDrawer(); // TODO to close the nav bar but it is not work !
+
     }
 
     @Override

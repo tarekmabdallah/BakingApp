@@ -30,8 +30,6 @@ import com.gmail.tarekmabdallah91.bakingapp.models.RecipeEntry;
 import com.gmail.tarekmabdallah91.bakingapp.models.UserEntry;
 import com.gmail.tarekmabdallah91.bakingapp.utils.NotificationUtils;
 
-import org.json.JSONObject;
-
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -41,15 +39,13 @@ import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.INGREDI
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.LATITUDE_KEYWORD;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.LONGITUDE_KEYWORD;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.NAME_KEYWORD;
-import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.SERVING_KEYWORD;
+import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.SERVINGS_KEYWORD;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.STEPS_KEYWORD;
-import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.TITLE_KEYWORD;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_FIRST_NAME;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_GENDER;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_LAST_NAME;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_LOCATION;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_PICTURE_PATH;
-import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_PICTURE_URI;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_STRING_ID;
 
 public class RoomPresenter {
@@ -168,13 +164,13 @@ public class RoomPresenter {
         if (null != data) {
             if (!data.isEmpty()) {
                 Log.d(TAG, String.format(context.getString(R.string.data_is), data.toString()));
-                String name = data.getString(TITLE_KEYWORD);
+                String name = data.getString(NAME_KEYWORD);
                 String steps = data.getString(STEPS_KEYWORD);
                 String ingredients = data.getString(INGREDIENTS_KEYWORD);
-                String image = data.getString(IMAGES_KEYWORD);
+                String images = data.getString(IMAGES_KEYWORD);
                 int recipeId = Integer.parseInt(data.getString(ID_KEYWORD));
-                int serving = Integer.parseInt(data.getString(SERVING_KEYWORD));
-                RecipeEntry recipeEntry = new RecipeEntry(recipeId, name, ingredients, steps, image, serving);
+                int serving = Integer.parseInt(data.getString(SERVINGS_KEYWORD));
+                RecipeEntry recipeEntry = new RecipeEntry(recipeId, name, ingredients, steps, images, serving);
                 insertRecipeDataToRoom(context, recipeEntry);
                 if (showNotification) {
                     NotificationUtils.startNotification(context, recipeEntry);
@@ -196,10 +192,9 @@ public class RoomPresenter {
                 Log.d(TAG, String.format(context.getString(R.string.data_is), bodyMsg.toString()));
                 int recipeId = Integer.parseInt(bodyMsg.get(ID_KEYWORD));
                 String name = bodyMsg.get(NAME_KEYWORD);
-                // to be sure that the value of both od keys ingredients and steps sre converted to String
                 String ingredients = bodyMsg.get(INGREDIENTS_KEYWORD);
                 String steps = bodyMsg.get(STEPS_KEYWORD);
-                int serving = Integer.parseInt(bodyMsg.get(SERVING_KEYWORD));
+                int serving = Integer.parseInt(bodyMsg.get(SERVINGS_KEYWORD));
                 String image = bodyMsg.get(IMAGES_KEYWORD);
                 RecipeEntry recipeEntry = new RecipeEntry(recipeId, name, ingredients, steps, image, serving);
                 insertRecipeDataToRoom(context, recipeEntry);
@@ -214,16 +209,8 @@ public class RoomPresenter {
      * to get the data from assets then save it on the Room
      *
      * @param context          -
-     * @param recipeJsonObject contains the RecipeEntry values
      */
-    final public void getRecipeDataFromJsonStoreItInRoom(final Context context, JSONObject recipeJsonObject) {
-        int id = recipeJsonObject.optInt(ID_KEYWORD);
-        int serving = recipeJsonObject.optInt(SERVING_KEYWORD);
-        String name = recipeJsonObject.optString(NAME_KEYWORD);
-        String images = recipeJsonObject.optString(IMAGES_KEYWORD);
-        String ingredients = recipeJsonObject.optString(INGREDIENTS_KEYWORD);
-        String steps = recipeJsonObject.optString(STEPS_KEYWORD);
-        RecipeEntry recipeEntry = new RecipeEntry(id, name, ingredients, steps, images, serving);
+    final public void getRecipeDataFromJsonStoreItInRoom(final Context context, RecipeEntry recipeEntry) {
         insertRecipeDataToRoom(context, recipeEntry);
     }
 
@@ -283,7 +270,6 @@ public class RoomPresenter {
                 userData.getString(USER_LAST_NAME),
                 userData.getInt(USER_GENDER),
                 userData.getString(USER_PICTURE_PATH),
-                userData.getString(USER_PICTURE_URI),
                 userData.getString(USER_LOCATION),
                 userData.getDouble(LATITUDE_KEYWORD),
                 userData.getDouble(LONGITUDE_KEYWORD));

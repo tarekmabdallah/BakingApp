@@ -35,7 +35,7 @@ public abstract class RecipeDatabase extends RoomDatabase{
 
     public static RecipeDatabase getInstance(Context context){
         if (null == instance){
-            synchronized (LOCK){ // TODO - to understand what is that "synchronized (LOCK)"
+            synchronized (LOCK) {
                 Log.d(TAG, context.getString(R.string.creating_new_db_instance_msg));
                 instance = Room.databaseBuilder(context.getApplicationContext()
                         , RecipeDatabase.class

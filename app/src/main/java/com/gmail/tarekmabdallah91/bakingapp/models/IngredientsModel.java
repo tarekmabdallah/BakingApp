@@ -42,30 +42,5 @@ public class IngredientsModel {
         final String INGREDIENT_IN_LINE = "%s\nQuantity: %d %s\n";
         return String.format(INGREDIENT_IN_LINE, ingredient, quantity, measure);
     }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public String getIngredient() {
-        return ingredient;
-    }
-
-    public void setIngredient(String ingredient) {
-        this.ingredient = ingredient;
-    }
-
-    public String getMeasure() {
-        return measure;
-    }
-
-    public void setMeasure(String measure) {
-        this.measure = measure;
-    }
-
 }
 

@@ -28,12 +28,12 @@
         android:id="@+id/splash_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="@dimen/padding_image_splash_ver"
         android:layout_marginTop="@dimen/padding_image_splash_ver"
-        android:layout_marginEnd="@dimen/padding_image_splash_ver"
         android:layout_marginBottom="@dimen/padding_image_splash_ver"
-        android:contentDescription="@string/splash_screen_image"
+        android:layout_marginStart="@dimen/padding_image_splash_ver"
+        android:layout_marginEnd="@dimen/padding_image_splash_ver"
         android:padding="@dimen/padding3"
+        android:contentDescription="@string/splash_screen_image"
         android:src="@drawable/recipe_book_main_list"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -50,9 +50,10 @@
         app:layout_constraintTop_toBottomOf="@id/splash_image" />
 
     <TextView
+        android:id="@+id/login"
         style="@style/text_views_style"
-        android:layout_margin="@dimen/padding2"
         android:text="@string/welcome_in_baking_app"
+        android:layout_margin="@dimen/padding2"
         app:layout_constraintBottom_toTopOf="@id/splash_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

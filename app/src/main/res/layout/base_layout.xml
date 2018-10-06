@@ -41,13 +41,5 @@
         android:visibility="gone"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <!-- for SettingsActivity -->
-    <include
-        android:id="@+id/layout_activity_settings"
-        layout="@layout/content_settings"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </android.support.design.widget.CoordinatorLayout>

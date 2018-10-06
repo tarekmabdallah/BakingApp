@@ -39,7 +39,9 @@
             android:id="@+id/child_items_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"></LinearLayout>
+            android:orientation="vertical">
+
+        </LinearLayout>
 
     </LinearLayout>
 

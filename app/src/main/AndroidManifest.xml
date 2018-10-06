@@ -22,6 +22,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
 
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="YOUR_GOOGLE_MAP_API_KEY" />
@@ -34,11 +35,11 @@
         <activity
             android:name=".activities.DetailsActivity"
             android:label="@string/details_label"
-            android:parentActivityName=".activities.RecipeStepActivity"
+            android:parentActivityName=".activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.RecipeStepActivity" />
+                android:value=".activities.MainActivity" />
         </activity>
         <activity
             android:name=".activities.EditProfileActivity"
@@ -51,21 +52,12 @@
                 android:value=".activities.MainActivity" />
         </activity>
         <activity
-            android:name=".activities.SettingsActivity"
-            android:label="@string/settings"
-            android:parentActivityName=".activities.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity" />
-        </activity>
-        <activity
             android:name=".activities.RecipeStepActivity"
-            android:parentActivityName=".activities.MainActivity"
+            android:parentActivityName=".activities.DetailsActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity" />
+                android:value=".activities.DetailsActivity" />
         </activity>
 
         <activity android:name=".activities.SplashActivity">

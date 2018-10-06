@@ -43,7 +43,6 @@ import com.gmail.tarekmabdallah91.bakingapp.data.room.RoomPresenter;
 import com.gmail.tarekmabdallah91.bakingapp.models.UserEntry;
 import com.gmail.tarekmabdallah91.bakingapp.utils.BitmapUtils;
 import com.gmail.tarekmabdallah91.bakingapp.utils.DrawerUtil;
-import com.gmail.tarekmabdallah91.bakingapp.utils.ThemesUtils;
 import com.gmail.tarekmabdallah91.bakingapp.utils.UserDataUtils;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -56,6 +55,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.mikepenz.materialdrawer.Drawer;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -71,6 +71,7 @@ import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.EMPTY_T
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.FORMAT_GEO;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.GENDER_MALE;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.IMAGE_INTENT_TYPE;
+import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.IMAGE_ROTATION;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.LATITUDE_KEYWORD;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.LONGITUDE_KEYWORD;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.PROVIDER_AUTHORITY;
@@ -83,7 +84,6 @@ import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_GE
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_LAST_NAME;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_LOCATION;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_PICTURE_PATH;
-import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_PICTURE_URI;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.USER_STRING_ID;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.ZERO;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.ZOOM_RATIO;
@@ -96,7 +96,6 @@ public class EditProfileActivity extends AppCompatActivity implements OnMapReady
     View layout_activity;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-
     @BindView(R.id.profile_picture)
     ImageView profilePictureIv;
     @BindView(R.id.take_picture)
@@ -123,17 +122,17 @@ public class EditProfileActivity extends AppCompatActivity implements OnMapReady
     EditText firstNameET;
     @BindView(R.id.last_name_et)
     EditText lastNameET;
-    private SupportMapFragment mapFragment;
 
+    private SupportMapFragment mapFragment;
     private Bundle userData;
     private UserEntry user;
     private double latitude;
     private double longitude;
+    private String imageFilePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(ThemesUtils.getThemeByKey(this)); // must be before setContentView() to set theme
         setContentView(R.layout.base_layout);
         ButterKnife.bind(this);
 
@@ -147,7 +146,7 @@ public class EditProfileActivity extends AppCompatActivity implements OnMapReady
 
         setMap();
         if (null != user) { // may be null if there is not any entry in userDb
-            Picasso.get().load(user.getImageFilePath()).error(android.R.drawable.stat_notify_error).into(profilePictureIv); // set image view
+            displayImageByPicasso(user.getImageFilePath());  // set image view
             firstNameET.setText(user.getFirstName()); // set first name
             lastNameET.setText(user.getLastName()); // set last name
             int gender = user.getGender(); // get saved gender then set it in the radio group
@@ -182,9 +181,10 @@ public class EditProfileActivity extends AppCompatActivity implements OnMapReady
                 // Error occurred while creating the File
             }
             if (photoFile != null) {
-                String imageFilePath = photoFile.getAbsolutePath();
-                userData.putString(USER_PICTURE_PATH, imageFilePath);
+                //String imageFilePathTemp = photoFile.getAbsolutePath();
                 Uri photoURI = FileProvider.getUriForFile(this, PROVIDER_AUTHORITY, photoFile);
+                //userData.putString(USER_PICTURE_PATH, String.valueOf(photoURI));
+                imageFilePath = String.valueOf(photoURI);
                 openTheCamera.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(openTheCamera, REQUEST_CAPTURE_IMAGE);
             }
@@ -202,39 +202,53 @@ public class EditProfileActivity extends AppCompatActivity implements OnMapReady
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // to get uri for profile picture to save it in Room (UserEntry)
-        String imageFilePath = null;
-        if (REQUEST_CAPTURE_IMAGE == requestCode && RESULT_OK == resultCode) {
-            imageFilePath = userData.getString(USER_PICTURE_PATH);
-        } else if (REQUEST_PICK_IMAGE_FROM_GALLERY == requestCode && RESULT_OK == resultCode) {
-            if (data != null) {
-                imageFilePath = String.valueOf(data.getData());
-                userData.putString(USER_PICTURE_PATH, imageFilePath);
-            }
-        }
-        Picasso.get().load(imageFilePath).error(android.R.drawable.stat_notify_error).into(profilePictureIv);
-
-        if (requestCode == REQUEST_PLACE_PIKER && resultCode == RESULT_OK) {
-            Place place;
-            if (data != null) {
-                place = PlacePicker.getPlace(this, data);
-                if (place == null) {
-                    Log.i(TAG, getString(R.string.no_place_selected_msg));
-                    Toast.makeText(this, getString(R.string.no_place_selected_msg), Toast.LENGTH_LONG).show();
-                } else {
-                    // Extract the place information from the API
-                    latitude = place.getLatLng().latitude;
-                    longitude = place.getLatLng().longitude;
-
-                    // Insert the place in the bundle userData
-                    String uriLocation = String.format(Locale.ENGLISH, FORMAT_GEO, latitude, longitude);
-                    userData.putString(USER_LOCATION, uriLocation);
-                    userData.putDouble(LATITUDE_KEYWORD, latitude);
-                    userData.putDouble(LONGITUDE_KEYWORD, longitude);
+        switch (requestCode) {
+            case REQUEST_CAPTURE_IMAGE: // to get uri for profile picture to save it in Room (UserEntry)
+                if (RESULT_OK != resultCode) {
+                    // when user didn't capture a photo, set imageFilePath with last image uri
+                    imageFilePath = user.getImageFilePath();
+                }// else save new image uri as String userData.putString(USER_PICTURE_PATH, imageFilePath); - moved to onClickSaveBtn
+                break;
+            case REQUEST_PICK_IMAGE_FROM_GALLERY: // to pick image from gallery
+                if (RESULT_OK == resultCode && null != data) {
+                    imageFilePath = String.valueOf(data.getData());
+                } else {// when false set imageFilePath with last image uri
+                    imageFilePath = user.getImageFilePath();
                 }
-            }
-        }
+                break;
+            case REQUEST_PLACE_PIKER: // to get user location
+                if (resultCode == RESULT_OK && null != data) {
+                    Place place;
+                    place = PlacePicker.getPlace(this, data);
+                    if (place == null) {
+                        Log.i(TAG, getString(R.string.no_place_selected_msg));
+                        Toast.makeText(this, getString(R.string.no_place_selected_msg), Toast.LENGTH_LONG).show();
+                    } else {
+                        // Extract the place information from the API
+                        latitude = place.getLatLng().latitude;
+                        longitude = place.getLatLng().longitude;
 
+                        // Insert the place in the bundle userData
+                        String uriLocation = String.format(Locale.ENGLISH, FORMAT_GEO, latitude, longitude);
+                        userData.putString(USER_LOCATION, uriLocation);
+                        userData.putDouble(LATITUDE_KEYWORD, latitude);
+                        userData.putDouble(LONGITUDE_KEYWORD, longitude);
+                    }
+                }
+                break;
+        }
+        // in case if user not captured image or picked an image it will load the old image if exist or show user image as placeholder
+        displayImageByPicasso(imageFilePath);
+    }
+
+    /**
+     * to avoid repeating writing the same code many times to display an image with picasso in the same ImageView
+     *
+     * @param imageFilePath -
+     */
+    private void displayImageByPicasso(String imageFilePath) {
+        Picasso.get().load(Uri.parse(imageFilePath)).fit().centerInside().rotate(IMAGE_ROTATION)
+                .error(R.drawable.ic_user2).into(profilePictureIv);
     }
 
     @OnClick(R.id.take_picture)
@@ -291,14 +305,14 @@ public class EditProfileActivity extends AppCompatActivity implements OnMapReady
     @OnClick(R.id.save_btn)
     void onClickSaveUserData() {
         // check if user selected / captured photo ?
-        if (null == userData.getString(USER_PICTURE_PATH) && null == userData.getString(USER_PICTURE_URI)) {
+        userData.putString(USER_PICTURE_PATH, imageFilePath);
+        if (null == userData.getString(USER_PICTURE_PATH)) {
             if (null == user) {// if != null that means that there is an image so continue and don't return
                 UserDataUtils.showToastMsg(this, getString(R.string.photo_required_msg));
                 return;
             } else {
                 // if the user didn't change the image then put it's path/uri in the userData again
                 // because when user click on save btn it get all new data and reset the user data again
-                userData.putString(USER_PICTURE_URI, user.getImageUrl());
                 userData.putString(USER_PICTURE_PATH, user.getImageFilePath());
             }
         }
@@ -328,7 +342,7 @@ public class EditProfileActivity extends AppCompatActivity implements OnMapReady
 
     @OnClick(R.id.cancel_btn)
     void onClickCancelBtn() {
-        // TODO to add dialog msg to make sure that user wanted to leave the activity
+        // TO DO to add dialog msg to make sure that user wanted to leave the activity
         finish();
     }
 
@@ -417,8 +431,9 @@ public class EditProfileActivity extends AppCompatActivity implements OnMapReady
     @Override
     protected void onResume() {
         super.onResume();
-        DrawerUtil.getDrawer(this, toolbar);
-        if (ThemesUtils.isThemeChanged()) recreate(); // to reset the theme
+        DrawerUtil drawerUtil = new DrawerUtil(this, toolbar);
+        Drawer drawer = drawerUtil.buildDrawer();
+        if (drawer.isDrawerOpen()) drawer.closeDrawer();
     }
 
     /**
@@ -434,7 +449,7 @@ public class EditProfileActivity extends AppCompatActivity implements OnMapReady
     /**
      * to set location on map immediately
      *
-     * @param googleMap
+     * @param googleMap -
      */
     private void setLocationOnMap(GoogleMap googleMap) {
         // set map type
@@ -448,4 +463,5 @@ public class EditProfileActivity extends AppCompatActivity implements OnMapReady
         // zoom to location
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), ZOOM_RATIO));
     }
+
 }

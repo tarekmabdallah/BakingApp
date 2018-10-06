@@ -19,14 +19,11 @@ public interface BakingConstants {
 
 
     String RECIPE_KEYWORD = "recipe";
-    String TITLE_KEYWORD = "title";
     String NAME_KEYWORD = "name";
     String ID_KEYWORD = "id";
-    String SERVING_KEYWORD = "serving";
-    String INSTRUCTIONS_KEYWORD = "instructions";
+    String SERVINGS_KEYWORD = "servings";
     String STEPS_KEYWORD = "steps";
     String INGREDIENTS_KEYWORD = "ingredients";
-    String VIDEOS_KEYWORD = "videos";
     String QUANTITY_KEYWORD = "quantity";
     String MEASURE_KEYWORD = "measure";
     String INGREDIENT_KEYWORD = "ingredient";
@@ -50,21 +47,13 @@ public interface BakingConstants {
     String USER_LOCATION = "USER_LOCATION";
     String USER_GENDER = "USER_GENDER";
     String USER_PICTURE_PATH = "USER_PICTURE_PATH";
-    String USER_PICTURE_URI = "USER_PICTURE_URI";
     String USER_STRING_ID = "USER_STRING_ID";
 
-    String PLACE_KEYWORD = "place";
     String FORMAT_GEO = "geo:%f,%f";
     String LATITUDE_KEYWORD = "latitude";
     String LONGITUDE_KEYWORD = "longitude";
 
-    String PREFERENCES_FILE = "_preferences";
-    String BLACK_KEYWORD = "black";
-    String GREEN_KEYWORD = "green_dark";
-    String PURPLE_KEYWORD = "purple";
-
     String EMPTY_TEXT = "";
-    String COMMA = ",";
     String LETTERS_ONLY_REGEX = "^[a-zA-Z]+$";
 
     int INVALID = -1;
@@ -72,8 +61,8 @@ public interface BakingConstants {
     int ONE = 1;
     int TWO = 2;
     int THREE = 3;
-    int FOUR = 4;
 
+    int IMAGE_ROTATION = 90;
     int IMAGE_SIZE = 100;
 
     int GENDER_MALE = 1;

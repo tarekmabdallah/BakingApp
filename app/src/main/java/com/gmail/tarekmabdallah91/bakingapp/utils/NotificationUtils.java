@@ -36,7 +36,8 @@ public class NotificationUtils {
     public static void startNotification (Context context, RecipeEntry recipeEntry){
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context , NOTIFICATION_CHANNEL_STRING_ID);
         notificationBuilder.setContentIntent(pendingIntent(context , getIntent(context , recipeEntry)))
-                .setSmallIcon(R.drawable.ic_icon_app2)
+                .setSmallIcon(R.drawable.ic_recipe_book_main_list_48dp)
+                .setLargeIcon(BitmapUtils.drawableToBitmap(context, R.drawable.ic_recipe_book_main_list_48dp))
                 .setContentTitle(context.getString(R.string.app_name))
                 .setContentText(recipeEntry.getName())
                 .setAutoCancel(true);

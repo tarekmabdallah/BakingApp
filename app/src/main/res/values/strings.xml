@@ -16,8 +16,6 @@ limitations under the License.
 <resources>
     <string name="app_name">Baking App</string>
 
-    <string name="settings"> Settings</string>
-
     <!-- used in string-array to share in intent in DetailsActivity-->
     <string name="recipe_title"> Recipe Title </string>
 
@@ -26,21 +24,8 @@ limitations under the License.
 
     <string name="details_label">Details:</string>
     <string name="ingredients_label">Ingredients:</string>
-    <string name="instructions_label">Instructions:</string>
-
-    <string name="title_list_background_colors">select your favoured theme</string>
-    <string name="key_background_color_list" translatable="false">backgroundColor</string>
-    <string name="value_color_white" translatable="false">white</string>
-    <string name="value_color_green_dark" translatable="false">green_dark</string>
-    <string name="value_color_purple" translatable="false">purple</string>
-    <string name="value_color_black" translatable="false">black</string>
-
-    <string name="key_color_green_dark">Green Dark</string>
-    <string name="key_color_purple">Purple</string>
-    <string name="key_color_black">Dracula</string>
 
     <string name="no_videos_msg">Sorry There is no videos for this step</string>
-    <string name="no_images_msg">Sorry There is not images for this recipe</string>
     <string name="creating_new_db_instance_msg">Creating new database instance</string>
     <string name="getting_db_instance_msg">Getting the database instance</string>
     <string name="token_is">Token is : %s</string>
@@ -68,14 +53,11 @@ limitations under the License.
     <string name="first_name_label">First Name</string>
     <string name="last_name_label">Last Name</string>
     <string name="not_valid_data_msg">Error : Please enter valid data !</string>
-    <string name="images_empty_msg">images are : empty</string>
     <string name="text_is_msg">text is : %s</string>
     <string name="need_location_permission_msg">need location permission</string>
     <string name="google_play_service_not_available_msg">GooglePlayServices Not Available [%s]</string>
     <string name="place_picker_exception">PlacePicker Exception: %s</string>
     <string name="no_place_selected_msg">No place selected</string>
-    <string name="themes_title_category_preferences">Themes :</string>
-    <string name="themes_category_key">themes</string>
     <string name="check_location_msg">Please select your location, and try again</string>
     <string name="select_your_location_label">Select your location</string>
     <string name="select_gender_label">Gender :</string>
@@ -89,5 +71,5 @@ limitations under the License.
     <string name="welcome_in_baking_app">Welcome in Baking App</string>
     <string name="next">Next</string>
     <string name="back">Back</string>
-    <string name="ingredients_to_string">%s\nQuantity: %d %s\n\n</string>
+    <string name="recipe_serving_num_persons">%s for %d persons</string>
 </resources>

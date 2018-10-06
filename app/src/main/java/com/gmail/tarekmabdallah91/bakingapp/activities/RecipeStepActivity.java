@@ -38,7 +38,8 @@ public class RecipeStepActivity extends AppCompatActivity {
         setContentView(R.layout.content_recipe_step);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        DrawerUtil.getDrawer(this, toolbar);
+        DrawerUtil drawerUtil = new DrawerUtil(this, toolbar);
+        drawerUtil.buildDrawer();
     }
 
     @Override

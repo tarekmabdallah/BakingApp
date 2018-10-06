@@ -15,6 +15,7 @@
  */
 package com.gmail.tarekmabdallah91.bakingapp.adapters.main_activity_adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -33,6 +34,7 @@ import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.ZERO;
 public class RecipesAdapter extends RecyclerView.Adapter<RecipesViewHolder> {
     private List<RecipeEntry> recipeEntries;
     private final OnRecipeClickListener onRecipeClickListener;
+    private Context context;
 
     public RecipesAdapter(OnRecipeClickListener onRecipeClickListener){
         this.onRecipeClickListener = onRecipeClickListener;
@@ -41,15 +43,17 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesViewHolder> {
     @NonNull
     @Override
     public RecipesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
+        context = parent.getContext();
         View root = LayoutInflater.from(context).inflate(R.layout.recipes_list_item , parent ,false);
         return new RecipesViewHolder(root);
     }
 
+    @SuppressLint("DefaultLocale")
     @Override
     public void onBindViewHolder(@NonNull RecipesViewHolder holder, int position) {
         RecipeEntry recipeEntry = recipeEntries.get(position);
-        holder.name.setText(recipeEntry.getName());
+        holder.name.setText(String.format(context.getString(R.string.recipe_serving_num_persons),
+                recipeEntry.getName(), recipeEntry.getServing()));
         holder.setOnRecipeClickListener(onRecipeClickListener);
         holder.setRecipeEntries(recipeEntries);
         holder.itemView.setTag(recipeEntry.getRowId());

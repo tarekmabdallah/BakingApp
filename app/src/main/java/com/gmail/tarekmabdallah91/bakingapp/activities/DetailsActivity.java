@@ -28,7 +28,6 @@ import com.gmail.tarekmabdallah91.bakingapp.fragments.DetailsFragment;
 import com.gmail.tarekmabdallah91.bakingapp.fragments.RecipeStepFragment;
 import com.gmail.tarekmabdallah91.bakingapp.models.RecipeEntry;
 import com.gmail.tarekmabdallah91.bakingapp.utils.DrawerUtil;
-import com.gmail.tarekmabdallah91.bakingapp.utils.ThemesUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,15 +42,13 @@ public class DetailsActivity extends AppCompatActivity implements OnStepClickedO
     private boolean twoPane = false;
     private RecipeEntry recipeEntry;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(ThemesUtils.getThemeByKey(this)); // must be before setContentView() to set theme
         setContentView(R.layout.content_details);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        DrawerUtil.getDrawer(this, toolbar);
-
 
         if (findViewById(R.id.fragment_master_sw600) != null
                 || getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -71,11 +68,11 @@ public class DetailsActivity extends AppCompatActivity implements OnStepClickedO
         }
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
-        if (ThemesUtils.isThemeChanged()) recreate(); // to reset the theme
+        DrawerUtil drawerUtil = new DrawerUtil(this, toolbar);
+        drawerUtil.buildDrawer();
     }
 
     @Override

@@ -22,22 +22,21 @@ limitations under the License.
     <color name="text_color_details_activity">#303F9F</color>
     <color name="text_color_main_activity">#303F9F</color>
 
-    <color name="white">@android:color/white</color>
-    <color name="green_dark">#ff669900</color>
     <color name="purple">#ffaa66cc</color>
-    <color name="blue_bright">#ff00ddff</color>
     <color name="black">#000000</color>
-    <color name="blue_dark">#3F51B5</color> <!-- action bar -->
+    <color name="blue_dark">#3F51B5</color>
+    <color name="gray">#EDE7F6</color>
 
 
     <!-- widget -->
-    <color name="widget_background">#ff00ddff</color>
-    <color name="widget_text_color">@android:color/white</color>
+    <color name="widget_background">@color/md_orange_300</color>
+    <color name="widget_text_color">#810709</color>
 
     <!-- splash screen -->
     <color name="splash_screen_background">@color/md_orange_300</color>
-    <color name="login_btn_background">@color/md_brown_400</color>
-    <color name="splash_text_color">@color/md_brown_400</color>
+
+    <!-- Nav background -->
+    <color name="nav_background_default_theme">#8C9EFF</color>
 
 
 </resources>

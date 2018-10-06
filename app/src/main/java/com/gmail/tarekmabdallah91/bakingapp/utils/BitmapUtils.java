@@ -37,6 +37,7 @@ import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.IMAGE_F
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.IMAGE_SUFFIX;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.ONE;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.TWO;
+import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.ZERO;
 
 public class BitmapUtils {
 
@@ -68,10 +69,9 @@ public class BitmapUtils {
      *
      * @param context          of the activity
      * @param selectedImageUri the uri of the selected image
-     * @param REQUIRED_SIZE    the size that we want to set the image
      * @return Bitmap
      */
-    public static Bitmap uriToBitmap(Context context, Uri selectedImageUri, int REQUIRED_SIZE) {
+    static Bitmap uriToBitmap(Context context, Uri selectedImageUri) {
 
         try {
             BitmapFactory.Options options = new BitmapFactory.Options();
@@ -83,10 +83,7 @@ public class BitmapUtils {
             int height = options.outHeight;
             int scale = ONE;
 
-            while (true) {
-                if (width / TWO < REQUIRED_SIZE || height / TWO < REQUIRED_SIZE) {
-                    break;
-                }
+            while (width / TWO >= BakingConstants.IMAGE_SIZE && height / TWO >= BakingConstants.IMAGE_SIZE) {
                 width /= TWO;
                 height /= TWO;
                 scale *= TWO;
@@ -102,16 +99,19 @@ public class BitmapUtils {
     }
 
     /**
-     * to rotate image by 90
+     * to rotate image by angle like 90
      *
-     * @param source
-     * @param angle
-     * @return
+     * @param source -
+     * @return -
      */
-    private static Bitmap rotateBitmap(Bitmap source, float angle) {
+    static Bitmap rotateBitmap(Bitmap source) {
         Matrix matrix = new Matrix();
-        matrix.postRotate(angle);
-        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+        matrix.postRotate((float) BakingConstants.IMAGE_ROTATION);
+        return Bitmap.createBitmap(source, ZERO, ZERO, source.getWidth(), source.getHeight(), matrix, true);
+    }
+
+    public static Bitmap drawableToBitmap(Context context, int drawableRes) {
+        return BitmapFactory.decodeResource(context.getResources(), drawableRes);
     }
 
 }

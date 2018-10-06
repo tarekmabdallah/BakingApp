@@ -40,7 +40,6 @@ import com.gmail.tarekmabdallah91.bakingapp.adapters.step_descriptons_adapter.On
 import com.gmail.tarekmabdallah91.bakingapp.adapters.step_descriptons_adapter.StepsAdapter;
 import com.gmail.tarekmabdallah91.bakingapp.models.ParentInExpendableRecyclerView;
 import com.gmail.tarekmabdallah91.bakingapp.models.RecipeEntry;
-import com.gmail.tarekmabdallah91.bakingapp.models.StepModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,8 +91,6 @@ public class DetailsFragment extends Fragment implements OnStepClickListener {
         ActionBar actionBar = ((AppCompatActivity) activity).getSupportActionBar();
         if (null != actionBar) actionBar.setTitle(recipe.getName());
         setListParentInExpendableRecyclerView();
-        List<StepModel> steps = recipe.getStepsList();
-
 
         setExpandableRecyclerView();
         setImagesRecipeRecyclerView();

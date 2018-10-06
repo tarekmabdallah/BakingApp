@@ -27,7 +27,9 @@
             android:paddingBottom="@dimen/padding_bottom_details_activity"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/no_videos_tv"></com.google.android.exoplayer2.ui.PlayerView>
+            app:layout_constraintTop_toBottomOf="@id/no_videos_tv">
+
+        </com.google.android.exoplayer2.ui.PlayerView>
 
 
         <TextView

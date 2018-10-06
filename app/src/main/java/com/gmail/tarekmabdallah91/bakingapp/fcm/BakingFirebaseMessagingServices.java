@@ -47,21 +47,25 @@ public class BakingFirebaseMessagingServices extends FirebaseMessagingService {
         Log.d(TAG, String.format(getString(R.string.notification_type_and_id_msg),
                 remoteMessage.getMessageType(), remoteMessage.getMessageId()));
 
-        // work when app is in foreground
-        Bundle data = remoteMessage.toIntent().getExtras();
-        if (null != data) Log.d(TAG, String.format(getString(R.string.bundle_is_msg), data));
-        RoomPresenter.getInstance(this).getRecipeDataFromMessageStoreItInRoom(this, data, true);
-
-        // get the data from msg by keys then insert them to Room and show notification
-        // to send JSON object it must be sent from customized server as FCM is only for some specified forms.
-
-        // example of notification and it's keys is like Map<Key,value>
+//        example of notification and it's keys is like Map<Key,value>
 //        "id": 1,
 //        "name": "Nutella Pie",
 //        "ingredients":[] ,
 //        "steps":[],
 //        "servings": 8,
-//        "image": ""
+//        "images": ""
+
+        // work when app is in foreground if it receives a message as intent then save it's data and return
+        Bundle data = remoteMessage.toIntent().getExtras();
+        if (null != data) {
+            Log.d(TAG, String.format(getString(R.string.bundle_is_msg), data));
+            RoomPresenter.getInstance(this).getRecipeDataFromMessageStoreItInRoom(this, data, true);
+            return;
+        }
+
+        // in case the message was not contain intent
+        // get the data from msg by keys then insert them to Room and show notification
+        // to send JSON object it must be sent from customized server as FCM is only for some specified forms.
         Map<String, String> bodyMsg = remoteMessage.getData();
         if (null != bodyMsg && !bodyMsg.isEmpty()) {
             RoomPresenter.getInstance(this).getRecipeDataFromMapStoreItInRoom(this, bodyMsg, true);

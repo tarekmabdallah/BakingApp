@@ -19,6 +19,7 @@ import android.content.Context;
 
 import com.gmail.tarekmabdallah91.bakingapp.data.room.RoomPresenter;
 import com.gmail.tarekmabdallah91.bakingapp.models.IngredientsModel;
+import com.gmail.tarekmabdallah91.bakingapp.models.RecipeEntry;
 import com.gmail.tarekmabdallah91.bakingapp.models.StepModel;
 
 import org.json.JSONArray;
@@ -34,11 +35,15 @@ import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.CHARSET
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.DESCRIPTION_KEYWORD;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.ID_KEYWORD;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.IMAGES_KEYWORD;
+import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.INGREDIENTS_KEYWORD;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.INGREDIENT_KEYWORD;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.MEASURE_KEYWORD;
+import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.NAME_KEYWORD;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.QUANTITY_KEYWORD;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.SAMPLE_RECIPES_JSON_FILE_NAME;
+import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.SERVINGS_KEYWORD;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.SHORT_DESCRIPTION_KEYWORD;
+import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.STEPS_KEYWORD;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.THUMBNAIL_URL;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.VIDEO_URL;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.ZERO;
@@ -79,7 +84,14 @@ public class JsonUtils {
             JSONArray samples = new JSONArray(json);
             for (int i = ZERO; i < samples.length(); i++) {
                 JSONObject recipe = samples.getJSONObject(i);
-                RoomPresenter.getInstance(context).getRecipeDataFromJsonStoreItInRoom(context, recipe);
+                int id = recipe.optInt(ID_KEYWORD);
+                int serving = recipe.optInt(SERVINGS_KEYWORD);
+                String name = recipe.optString(NAME_KEYWORD);
+                String images = recipe.optString(IMAGES_KEYWORD);
+                String ingredients = recipe.optString(INGREDIENTS_KEYWORD);
+                String steps = recipe.optString(STEPS_KEYWORD);
+                RecipeEntry recipeEntry = new RecipeEntry(id, name, ingredients, steps, images, serving);
+                RoomPresenter.getInstance(context).getRecipeDataFromJsonStoreItInRoom(context, recipeEntry);
             }
         } catch (JSONException e) {
             e.printStackTrace();
