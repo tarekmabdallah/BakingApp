@@ -1,17 +1,16 @@
 /*
- Copyright 2018 tarekmabdallah91@gmail.com
-
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
-
- http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
+ * Copyright 2018 tarekmabdallah91@gmail.com
+ *
+ * Licensed under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 package com.gmail.tarekmabdallah91.bakingapp.data.room;
 
@@ -34,7 +33,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.ID_KEYWORD;
-import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.IMAGES_KEYWORD;
+import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.IMAGE_KEYWORD;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.INGREDIENTS_KEYWORD;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.LATITUDE_KEYWORD;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.LONGITUDE_KEYWORD;
@@ -167,7 +166,7 @@ public class RoomPresenter {
                 String name = data.getString(NAME_KEYWORD);
                 String steps = data.getString(STEPS_KEYWORD);
                 String ingredients = data.getString(INGREDIENTS_KEYWORD);
-                String images = data.getString(IMAGES_KEYWORD);
+                String images = data.getString(IMAGE_KEYWORD);
                 int recipeId = Integer.parseInt(data.getString(ID_KEYWORD));
                 int serving = Integer.parseInt(data.getString(SERVINGS_KEYWORD));
                 RecipeEntry recipeEntry = new RecipeEntry(recipeId, name, ingredients, steps, images, serving);
@@ -195,7 +194,7 @@ public class RoomPresenter {
                 String ingredients = bodyMsg.get(INGREDIENTS_KEYWORD);
                 String steps = bodyMsg.get(STEPS_KEYWORD);
                 int serving = Integer.parseInt(bodyMsg.get(SERVINGS_KEYWORD));
-                String image = bodyMsg.get(IMAGES_KEYWORD);
+                String image = bodyMsg.get(IMAGE_KEYWORD);
                 RecipeEntry recipeEntry = new RecipeEntry(recipeId, name, ingredients, steps, image, serving);
                 insertRecipeDataToRoom(context, recipeEntry);
                 if (showNotification) {

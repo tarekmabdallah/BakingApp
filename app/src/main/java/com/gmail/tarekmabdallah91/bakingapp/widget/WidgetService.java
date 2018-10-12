@@ -13,27 +13,16 @@
  * either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.gmail.tarekmabdallah91.bakingapp.models;
+package com.gmail.tarekmabdallah91.bakingapp.widget;
 
-import java.io.Serializable;
-import java.util.List;
+import android.content.Intent;
+import android.widget.RemoteViewsService;
 
-public class ParentInExpendableRecyclerView implements Serializable {
 
-    private final String parentName;
-    private final List<String> childes;
-
-    public ParentInExpendableRecyclerView(String parentName, List<String> childes) {
-        this.parentName = parentName;
-        this.childes = childes;
-    }
-
-    public List<String> getChildes() {
-        return childes;
-    }
-
-    public String getParentName() {
-        return parentName;
+public class WidgetService extends RemoteViewsService {
+    @Override
+    public RemoteViewsFactory onGetViewFactory(Intent intent) {
+        return (new IngredientsWidgetService(this.getApplicationContext(), intent));
     }
 
 }

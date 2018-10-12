@@ -101,7 +101,7 @@
       }
     ],
     "servings": 8,
-    "images": "http://cooknshare.com/wp-content/uploads/2015/10/C1915293-1444846793783477large.jpg"
+    "image": "http://cooknshare.com/wp-content/uploads/2015/10/C1915293-1444846793783477large.jpg"
   },
   {
     "id": 2,
@@ -231,7 +231,7 @@
       }
     ],
     "servings": 8,
-    "images": ""
+    "image": ""
   },
   {
     "id": 3,
@@ -382,7 +382,7 @@
       }
     ],
     "servings": 8,
-    "images": ""
+    "image": ""
   },
   {
     "id": 4,
@@ -528,6 +528,6 @@
       }
     ],
     "servings": 8,
-    "images": "https://assets.kraftfoods.com/recipe_images/opendeploy/Philadelphia-New-York-Cheesecake-1366_640x428.jpg"
+    "image": "https://assets.kraftfoods.com/recipe_images/opendeploy/Philadelphia-New-York-Cheesecake-1366_640x428.jpg"
   }
 ]

@@ -1,17 +1,16 @@
 /*
- Copyright 2018 tarekmabdallah91@gmail.com
-
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
-
- http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
+ * Copyright 2018 tarekmabdallah91@gmail.com
+ *
+ * Licensed under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 package com.gmail.tarekmabdallah91.bakingapp.fragments;
 
@@ -46,6 +45,7 @@ import butterknife.OnClick;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.INVALID;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.ONE;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.POSITION_KEYWORD;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.RECIPE_KEYWORD;
@@ -72,9 +72,9 @@ public class RecipeStepFragment extends Fragment {
     private ExoPlayer exoPlayer;
     private RecipeEntry recipe;
     private String videosUrl;
-    private int position;
+    private int positionStep;
     private int stepsCount;
-    private boolean twoPane;
+    private long currentPositionExoPlayer;
 
     public RecipeStepFragment() {
     }
@@ -91,9 +91,12 @@ public class RecipeStepFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         activity = getActivity();
-        if (twoPane) { // for first time open the two pane layout .. show msg to select step then after that run normally
+        if (null != savedInstanceState) {
+            currentPositionExoPlayer = savedInstanceState.getLong(POSITION_KEYWORD, ZERO);
+            recipe = savedInstanceState.getParcelable(RECIPE_KEYWORD);
+        }
+        if (null == recipe && positionStep == INVALID) { // for first time open the two pane layout .. show msg to select step then after that run normally
             makeUIVisible(false);
-            twoPane = false;
         } else {
             getComingIntents();
         }
@@ -110,12 +113,11 @@ public class RecipeStepFragment extends Fragment {
             if (null != actionBar) actionBar.setTitle(recipe.getName());
             List<StepModel> steps = recipe.getStepsList();
             stepsCount = steps.size();
-            StepModel step = steps.get(position);
+            StepModel step = steps.get(positionStep);
             videosUrl = step.getVideoUrl();
             if (videosUrl == null || videosUrl.isEmpty())
                 videosUrl = step.getThumbnailUrl();
-            if (videosUrl == null || videosUrl.isEmpty())
-                noVideosTV.setVisibility(VISIBLE);
+
 
             instructionTV.setText(step.getDescription());
             makeUIVisible(true);
@@ -148,22 +150,33 @@ public class RecipeStepFragment extends Fragment {
             Intent comingIntent = activity.getIntent();
             if (null != comingIntent) {
                 recipe = comingIntent.getParcelableExtra(RECIPE_KEYWORD);
-                position = comingIntent.getIntExtra(POSITION_KEYWORD, ZERO);
+                positionStep = comingIntent.getIntExtra(POSITION_KEYWORD, ZERO);
             } else {
                 makeUIVisible(false);
             }
         }
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (null != exoPlayer) {
+            currentPositionExoPlayer = exoPlayer.getCurrentPosition();
+            outState.putLong(POSITION_KEYWORD, currentPositionExoPlayer);
+            outState.putParcelable(RECIPE_KEYWORD, recipe);
+        }
+
+    }
+
     @OnClick(R.id.next_instruction_tv)
     void onClickOnNextBtn() {
-        // TODO - to search if there is method better thatn it to replace the fragment
-        if (position < stepsCount - ONE) openNewStep(++position);
+        // TODO - to search if there is method better than it to replace the fragment
+        if (positionStep < stepsCount - ONE) openNewStep(++positionStep);
     }
 
     @OnClick(R.id.back_instruction_tv)
     void onClickOnBackBtn() {
-        if (position > ZERO) openNewStep(--position);
+        if (positionStep > ZERO) openNewStep(--positionStep);
     }
 
     private void openNewStep(int position) {
@@ -177,12 +190,38 @@ public class RecipeStepFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (Util.SDK_INT > SDK_MARSHMALLOW && null != videosUrl && !videosUrl.isEmpty()) {
-            playerView.setAlpha(ONE);
-            playerView.setVisibility(VISIBLE);
-            exoPlayer = recipeExoPlayer.initializePlayerForMp4(playerView, videosUrl);
+        if (Util.SDK_INT > SDK_MARSHMALLOW) {
+            if (null != videosUrl && !videosUrl.isEmpty()) {
+                exoPlayer = recipeExoPlayer.initializePlayerForMp4(playerView, videosUrl);
+                if (currentPositionExoPlayer > ZERO) exoPlayer.seekTo(currentPositionExoPlayer);
+            } else {
+                playerView.setAlpha(ZERO);
+                playerView.setVisibility(GONE);
+                noVideosTV.setVisibility(VISIBLE);
+            }
         }
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (Util.SDK_INT <= SDK_MARSHMALLOW) {
+            if (null == exoPlayer && null != videosUrl && !videosUrl.isEmpty()) {
+                if (null != recipeExoPlayer) {
+                    recipeExoPlayer.hideSystemUi();
+                    playerView.setAlpha(ONE);
+                    playerView.setVisibility(VISIBLE);
+                    exoPlayer = recipeExoPlayer.initializePlayerForMp4(playerView, getString(R.string.media_url_dash));
+                    if (currentPositionExoPlayer > ZERO) exoPlayer.seekTo(currentPositionExoPlayer);
+                }
+            } else {
+                noVideosTV.setVisibility(VISIBLE);
+                playerView.setAlpha(ZERO);
+                playerView.setVisibility(GONE);
+            }
+        }
+    }
+
 
     @Override
     public void onPause() {
@@ -200,22 +239,9 @@ public class RecipeStepFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (null != recipeExoPlayer) recipeExoPlayer.hideSystemUi();
-        if ((Util.SDK_INT <= SDK_MARSHMALLOW || null == exoPlayer) && (null != videosUrl && !videosUrl.isEmpty())) {
-            if (recipeExoPlayer != null) {
-                playerView.setAlpha(ONE);
-                playerView.setVisibility(VISIBLE);
-                exoPlayer = recipeExoPlayer.initializePlayerForMp4(playerView, getString(R.string.media_url_dash));
-            }
-        }
-    }
 
     public void setFragmentData(RecipeEntry recipe, int position) {
         this.recipe = recipe;
-        this.position = position;
-        this.twoPane = true;
+        this.positionStep = position;
     }
 }

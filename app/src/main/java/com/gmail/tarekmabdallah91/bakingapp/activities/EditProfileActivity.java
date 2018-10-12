@@ -1,18 +1,19 @@
+
 /*
- Copyright 2018 tarekmabdallah91@gmail.com
-
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
-
- http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
+ * Copyright 2018 tarekmabdallah91@gmail.com
+ *
+ * Licensed under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
+
 package com.gmail.tarekmabdallah91.bakingapp.activities;
 
 import android.Manifest;
@@ -130,6 +131,7 @@ public class EditProfileActivity extends AppCompatActivity implements OnMapReady
     private double longitude;
     private String imageFilePath;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -161,7 +163,7 @@ public class EditProfileActivity extends AppCompatActivity implements OnMapReady
     private void initiateValues() {
         userData = new Bundle();
         user = RoomPresenter.getLastUserEntry(this);
-        getUserGender(); // get gender should be here to listen to all changes
+        setGenderRadioGroup(); // get gender should be here to listen to all changes
     }
 
 
@@ -322,6 +324,9 @@ public class EditProfileActivity extends AppCompatActivity implements OnMapReady
             UserDataUtils.showToastMsg(this, getString(R.string.not_valid_data_msg));
             return;
         }
+
+        getUserGender();// to update/set user gender
+
         // get user String Id - TODO to get it's value from Fire base.
         String userId = UserDataUtils.setUserId();
         userData.putString(USER_STRING_ID, userId);
@@ -367,6 +372,11 @@ public class EditProfileActivity extends AppCompatActivity implements OnMapReady
      * to get user gender from user choice on the profile Activity
      */
     private void getUserGender() {
+        if (maleChoice.isChecked()) userData.putInt(USER_GENDER, GENDER_MALE);
+        else userData.putInt(USER_GENDER, ZERO); // 0 as female int value
+    }
+
+    private void setGenderRadioGroup() {
         RadioGroup.OnCheckedChangeListener changeListenerRadioGroup = new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -376,7 +386,6 @@ public class EditProfileActivity extends AppCompatActivity implements OnMapReady
             }
         };
         getGenderRG.setOnCheckedChangeListener(changeListenerRadioGroup);
-
     }
 
     private void getLocation() {

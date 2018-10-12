@@ -1,17 +1,16 @@
 /*
- Copyright 2018 tarekmabdallah91@gmail.com
-
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
-
- http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
+ * Copyright 2018 tarekmabdallah91@gmail.com
+ *
+ * Licensed under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 package com.gmail.tarekmabdallah91.bakingapp.utils;
 
@@ -34,7 +33,7 @@ import java.util.List;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.CHARSET_NAME;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.DESCRIPTION_KEYWORD;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.ID_KEYWORD;
-import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.IMAGES_KEYWORD;
+import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.IMAGE_KEYWORD;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.INGREDIENTS_KEYWORD;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.INGREDIENT_KEYWORD;
 import static com.gmail.tarekmabdallah91.bakingapp.utils.BakingConstants.MEASURE_KEYWORD;
@@ -57,6 +56,7 @@ public class JsonUtils {
      * @param context to get assets
      * @return string json
      */
+    @SuppressWarnings("unused")
     private static String loadJsonFromAssets(Context context) {
         String json;
         try {
@@ -87,10 +87,10 @@ public class JsonUtils {
                 int id = recipe.optInt(ID_KEYWORD);
                 int serving = recipe.optInt(SERVINGS_KEYWORD);
                 String name = recipe.optString(NAME_KEYWORD);
-                String images = recipe.optString(IMAGES_KEYWORD);
+                String image = recipe.optString(IMAGE_KEYWORD);
                 String ingredients = recipe.optString(INGREDIENTS_KEYWORD);
                 String steps = recipe.optString(STEPS_KEYWORD);
-                RecipeEntry recipeEntry = new RecipeEntry(id, name, ingredients, steps, images, serving);
+                RecipeEntry recipeEntry = new RecipeEntry(id, name, ingredients, steps, image, serving);
                 RoomPresenter.getInstance(context).getRecipeDataFromJsonStoreItInRoom(context, recipeEntry);
             }
         } catch (JSONException e) {
@@ -172,25 +172,4 @@ public class JsonUtils {
         return shortDescriptionList;
     }
 
-    /**
-     * to get Strings from JsonArray of shortDescription
-     *
-     * @param jsonString -
-     * @return List<StepModel>
-     */
-    public static List<String> getImagesListFromJson(String jsonString) {
-        List<String> imagesList = new ArrayList<>();
-
-        try {
-            JSONArray stepsJsonArray = new JSONArray(jsonString);
-            for (int i = ZERO; i < stepsJsonArray.length(); i++) {
-                JSONObject recipeJsonObject = stepsJsonArray.getJSONObject(i);
-                String images = recipeJsonObject.optString(IMAGES_KEYWORD);
-                imagesList.add(images);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return imagesList;
-    }
 }

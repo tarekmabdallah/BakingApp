@@ -12,7 +12,6 @@
   ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
   ~ either express or implied. See the License for the specific language governing permissions and limitations under the License.
   -->
-
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -28,7 +27,7 @@
             style="@style/text_views_style"
             android:layout_margin="@dimen/padding2"
             android:text="@string/no_videos_msg"
-            android:visibility="invisible"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/exo_player" />
